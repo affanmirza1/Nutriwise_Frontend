@@ -163,7 +163,7 @@ const Login = ({ navigation }) => {
       }
 
       // Send a request to the API
-      const response = await fetch(`http://192.168.0.100:5000/get_user_data?email=${email}`);
+      const response = await fetch(`http://192.168.80.12:5000/get_user_data?email=${email}`);
       const data = await response.json();
 
       const user_data = data.user_data;

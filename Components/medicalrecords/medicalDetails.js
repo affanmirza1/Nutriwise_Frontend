@@ -13,8 +13,8 @@ const MedicalCard = () => {
             const email = await AsyncStorage.getItem('email')
 
             try {
-                const response = await fetch(`http://192.168.0.100:5000/get_medical_records?email=${email}`, {
-                    method: 'GET',
+                const response = await fetch(`http://192.168.80.12:5000/get_medical_records?email=${email}`, {
+                    method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
                         // Add other headers if needed

@@ -134,58 +134,51 @@
 // export default CapturedImageComponent;
 
 import React from 'react';
-import { StyleSheet, View, Image, TouchableOpacity,FlatList, Text } from 'react-native';
+import { StyleSheet, View, TouchableOpacity, Text, Image, ScrollView } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 
-const CapturedImageComponent = ({ capturedImage, goBack, saveToGallery, apiResponse }) => {
-  console.log('muAPI', apiResponse)
+const CapturedImageComponent = ({ goBack, saveToGallery, apiResponse, capturedImage }) => {
+  const renderNutrientRows = () => {
+    if (apiResponse?.nutrition_info) {
+      return apiResponse.nutrition_info.map((nutrient, index) => (
+        <View key={index} style={styles.nutrientRow}>
+          <Text style={styles.nutrientLabel}>{nutrient.name}</Text>
+          <View style={styles.nutrientValues}>
+          <Text style={styles.boldText}>{nutrient.calories} Calories</Text>
+          <Text style={styles.boldText}>{nutrient.carbohydrates_total_g}g Carbs</Text>
+          <Text style={styles.boldText}>{nutrient.fat_total_g}g Fat</Text>
+        </View>
+        <View style={styles.nutrientValues}>
+          <Text style={styles.boldText}>{nutrient.protein_g}g Protein</Text>
+          <Text style={styles.boldText}>{nutrient.sugar_g}g Sugar</Text>
+          <Text style={styles.boldText}>{nutrient.fiber_g}g Fiber</Text>
+        </View>
+
+        </View>
+      ));
+    } else {
+      return <Text>No nutrient information available</Text>;
+    }
+  };
 
   return (
+    <ScrollView contentContainerStyle={styles.screen}>
+      <View style={styles.container}>
+        <View style={styles.imageContainer}>
+          <Image source={{ uri: capturedImage }} style={styles.capturedImage} />
+        </View>
 
-    <View style={styles.container}>
+        <View style={styles.card}>
+        <Text style={styles.heading}>Prediction: {apiResponse?.prediction || 'No prediction available'}</Text>
 
-
-      <View style={styles.imageContainer}>
-        <Image source={{ uri: capturedImage }} style={styles.capturedImage} />
-      </View>
-      <View style={styles.apiResponseContainer}>
-        <Text style={styles.apiResponseText}>Prediction: {apiResponse?.nutrition_info?.fat_saturated_g} </Text>
-        <Text style={styles.apiResponsePrediction}>{apiResponse ? apiResponse.prediction : ''}</Text>
-
-        {
-          <Text style={styles.apiResponseText}>Prediction: {apiResponse?.prediction} </Text>
-        }
-
-        <FlatList
-          data={apiResponse?.nutrition_info}
-          keyExtractor={(item, index) => index.toString()}
-          renderItem={({ item }) => (
-            <View style={styles.nutritionInfoItem}>
-              <Text style={styles.itemName}>{item.name}</Text>
-              <Text>Calories: {item.calories}</Text>
-              <Text>Carbohydrates: {item.carbohydrates_total_g}g</Text>
-              <Text>Fat: {item.fat_total_g}g</Text>
+          <View style={styles.nutrientsTable}>
+            <View style={styles.tableHeader}>
+              <Text style={styles.headerText}>Nutrient</Text>
+              {/* <Text style={styles.headerText}>Values</Text> */}
             </View>
-          )}
-        />
-
-        <Text style={styles.apiResponseText}>Nutrients: </Text>
-        {apiResponse && apiResponse.nutrition_info ? (
-          <View>
-            <Text style={styles.apiResponsePrediction}>
-              Calories: {apiResponse.nutrition_info.calories} |
-              Carbohydrates: {apiResponse.nutrition_info[0].carbohydrates_total_g} |
-              Fat: {apiResponse.nutrition_info[0].fat_total_g}
-            </Text>
-            <Text style={styles.apiResponsePrediction}>
-              Protein: {apiResponse.nutrition_info[0].protein_g} |
-              Sugar: {apiResponse.nutrition_info[0].sugar_g} |
-              Fiber: {apiResponse.nutrition_info[0].fiber_g}
-            </Text>
+            {renderNutrientRows()}
           </View>
-        ) : (
-          <Text>No nutrient information available</Text>
-        )}
+        </View>
       </View>
 
       <View style={styles.actionsContainer}>
@@ -196,48 +189,82 @@ const CapturedImageComponent = ({ capturedImage, goBack, saveToGallery, apiRespo
           <Ionicons name="save" size={30} color="green" />
         </TouchableOpacity>
       </View>
-    </View>
+    </ScrollView>
   );
 };
 
 const styles = StyleSheet.create({
+  screen: {
+    flexGrow: 1,
+    justifyContent: 'center',
+    backgroundColor: '#f5f5f5',
+  },
   container: {
-    flex: 1,
     alignItems: 'center',
     justifyContent: 'center',
+    flex: 1,
   },
   imageContainer: {
     alignItems: 'center',
     justifyContent: 'center',
+    marginTop: 10,
   },
   capturedImage: {
-    width: 400,
-    height: 900,
-    top : 300,
+    width: 130,
+    height: 130,
+    borderRadius: 70,
     resizeMode: 'cover',
+    marginBottom: 3,
   },
-  apiResponseContainer: {
-    alignItems: 'center',
+  card: {
+    backgroundColor: '#11B3CF33',
+    borderRadius: 10,
+    elevation: 5,
+    padding: 20,
+    width: '90%',
+    alignSelf: 'center',
     marginBottom: 20,
   },
-  apiResponseText: {
+  heading: {
     fontSize: 20,
     fontWeight: 'bold',
-    backgroundColor: '#000',
+    marginBottom: 10,
   },
-  apiResponsePrediction: {
-    fontSize: 18,
-    marginTop: 5,
-    width: 100,
-    backgroundColor: '#000',
+  nutrientsTable: {
+    marginTop: 10,
+  },
+  tableHeader: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    marginBottom: 10,
+  },
+  headerText: {
+    fontSize: 16,
     fontWeight: 'bold',
-    fontStyle: 'italic'
+  },
+  nutrientRow: {
+    marginBottom: 15,
+    borderBottomWidth: 1,
+    borderColor: '#ddd',
+    paddingBottom: 10,
+  },
+  nutrientLabel: {
+    fontSize: 16,
+    fontWeight: 'bold',
+    marginBottom: 5,
+  },
+  nutrientValues: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
   },
   actionsContainer: {
     flexDirection: 'row',
-    marginBottom: 25,
     justifyContent: 'space-between',
-    width: 230,
+    width: '90%',
+    alignSelf: 'center',
+  },
+  boldText: {
+    fontWeight: 'bold',
   },
 });
 

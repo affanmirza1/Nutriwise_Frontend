@@ -873,7 +873,7 @@ const NutrientsComponent = ({ userData }) => {
         const email = await AsyncStorage.getItem('email');
         
         // Make a request to the API
-        fetch(`http://192.168.0.100:5000/get_user_data?email=${email}`)
+        fetch(`http://192.168.80.12:5000/get_user_data?email=${email}`)
           .then((response) => response.json())
           .then((data) => {
             // Handle the API response here
@@ -977,7 +977,7 @@ const styles = StyleSheet.create({
     borderRadius: 20,
     padding: 20,
     marginVertical: 50,
-    marginBottom: 230,
+    marginBottom: 190,
   },
   cardTitle: {
     fontSize: 20,

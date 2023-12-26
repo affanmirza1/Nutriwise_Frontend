@@ -39,10 +39,10 @@ const MedicalRecords = ({ navigation }) => {
 
                 <TouchableOpacity >
                     <View style={userProfileStyles.profileContainer}>
-                        <Image source={profileImage} style={userProfileStyles.profilePicture} />
+                        {/* <Image source={profileImage} style={userProfileStyles.profilePicture} /> */}
                         <View style={userProfileStyles.userInfo}>
-                            <Text style={userProfileStyles.userName}>Kinza Arshad</Text>
-                            <Text style={userProfileStyles.userAge}>Age 25</Text>
+                            <Text style={userProfileStyles.userName}>Affan Mirza</Text>
+                            <Text style={userProfileStyles.userAge}>Age 23</Text>
                         </View>
 
                         <View style={userProfileStyles.arrow_rt}>

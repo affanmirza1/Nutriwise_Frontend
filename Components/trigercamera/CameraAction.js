@@ -9,10 +9,7 @@ import { Camera } from 'expo-camera';
 import { Ionicons } from '@expo/vector-icons';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
-
-
 const CameraAction = ({ userData }) => {
-
     const [hasPermission, setHasPermission] = useState(null);
     const [showCamera, setShowCamera] = useState(false);
     const [capturedImage, setCapturedImage] = useState(null);
@@ -26,7 +23,6 @@ const CameraAction = ({ userData }) => {
         const { status } = await Camera.requestCameraPermissionsAsync();
         setHasPermission(status === 'granted');
     };
-
 
     const takePicture = async () => {
         if (cameraRef.current) {
@@ -43,7 +39,7 @@ const CameraAction = ({ userData }) => {
 
                 // Extract user's email
                 const userEmail = userData.email;
-                const email = await AsyncStorage.getItem('email')
+                const email = await AsyncStorage.getItem('email');
 
                 const data = new FormData();
                 data.append('image', {
@@ -55,7 +51,7 @@ const CameraAction = ({ userData }) => {
                 // Include user's email in the API request
                 data.append('email', email);
 
-                fetch('http://192.168.0.100:5000/upload', {
+                fetch('http://192.168.80.12:5000/upload', {
                     method: 'POST',
                     body: data,
                 })
@@ -87,11 +83,9 @@ const CameraAction = ({ userData }) => {
         setShowCamera(false);
     };
 
-
     userData = async () => {
-
-        return await AsyncStorage.getItem('user_data')
-    }
+        return await AsyncStorage.getItem('user_data');
+    };
 
     return (
         <View style={styles.container}>
@@ -107,7 +101,9 @@ const CameraAction = ({ userData }) => {
                 )}
 
                 {isLoading ? (
-                    <ActivityIndicator size="large" color="#0000ff" />
+                    <View style={styles.loadingContainer}>
+                        <ActivityIndicator size="large" color="#0000ff" />
+                    </View>
                 ) : !showCamera && !capturedImage ? (
                     showMacros ? (
                         <MacrosComponent userData={userData} />
@@ -128,7 +124,7 @@ const CameraAction = ({ userData }) => {
                 ) : null}
 
                 {!showCamera && !capturedImage && (
-                    <View style={styles.CameraIconBg}>
+                    <View style={styles.cameraIconBg}>
                         <TouchableOpacity style={styles.cameraIcon} onPress={() => setShowCamera(true)}>
                             <Ionicons name="camera" size={30} color="#fff" />
                         </TouchableOpacity>
@@ -136,35 +132,38 @@ const CameraAction = ({ userData }) => {
                 )}
             </View>
         </View>
-
-
-
-    )
-
-
-}
+    );
+};
 
 const styles = StyleSheet.create({
+    container: {
+        flex: 1,
+    },
+    contentContainer: {
+        flex: 1,
+    },
     cameraIcon: {
         position: 'relative',
         bottom: 45,
         width: 75,
         height: 75,
-        right : 15,
-        marginLeft : 'auto',
+        right: 15,
+        marginLeft: 'auto',
         backgroundColor: 'black',
         borderRadius: 50,
         justifyContent: 'center',
         alignItems: 'center',
-        textAlign: 'center'
+        textAlign: 'center',
     },
-
-    CameraIconBg: {
+    cameraIconBg: {
         backgroundColor: '#11B3CF33',
         padding: 10,
-    }
-})
-
-
+    },
+    loadingContainer: {
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
+    },
+});
 
 export default CameraAction;

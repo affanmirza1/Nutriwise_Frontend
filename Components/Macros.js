@@ -752,7 +752,7 @@ const MacrosComponent = ({ userData }) => {
         const email = await AsyncStorage.getItem('email')
 
         if (userData && email) {
-          const response = await fetch(`http://192.168.0.100:5000/get_user_data?email=${email}`);
+          const response = await fetch(`http://192.168.80.12:5000/get_user_data?email=${email}`);
           const data = await response.json();
 
           const bmr = data.user_data.bmr_info.bmr;

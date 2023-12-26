@@ -97,40 +97,45 @@
 
 // export default RegisterPage;
 
-
 import React, { useState } from 'react';
-import { View, StyleSheet, Text, TextInput, TouchableOpacity, ScrollView, Alert } from 'react-native';
+import { View, Text, TextInput, TouchableOpacity, StyleSheet, Alert } from 'react-native';
+import DropDownPicker from 'react-native-dropdown-picker';
 
-const RegisterPage = ({ onRegister ,navigation }) => {
+const RegisterPage = ({ navigation }) => {
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [heightCm, setHeightCm] = useState('');
   const [weightKg, setWeightKg] = useState('');
   const [age, setAge] = useState('');
   const [gender, setGender] = useState('');
-  const [activityLevel, setActivityLevel] = useState('');
+  const [activityLevel, setActivityLevel] = useState(null);
+  const [open, setOpen] = useState(false);
+
+  const activityLevels = [
+    { label: 'Sedentary', value: 'sedentary' },
+    { label: 'Light Activity', value: 'light activity' },
+    { label: 'Moderate Activity', value: 'moderate activity' },
+    { label: 'Very Active', value: 'very active' },
+  ];
 
   const handleRegister = async () => {
     try {
-      // Check if any of the required fields are empty
       if (!name || !email || !heightCm || !weightKg || !age || !gender || !activityLevel) {
         Alert.alert('Error', 'Please fill in all fields');
         return;
       }
 
-      // Prepare the data object to send to the API
       const data = {
         name,
         email,
-        height_cm: heightCm,
-        weight_kg: weightKg,
-        age,
+        height_cm: parseFloat(heightCm), // Convert to float
+        weight_kg: parseFloat(weightKg), // Convert to float
+        age: parseFloat(age), // Convert to float
         gender,
         activity_level: activityLevel.trim(),
       };
 
-      // Send a POST request to the API endpoint
-      const response = await fetch('http://192.168.0.100:5000/calculate_bmr', {
+      const response = await fetch('http://192.168.80.12:5000/calculate_bmr', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -138,19 +143,12 @@ const RegisterPage = ({ onRegister ,navigation }) => {
         body: JSON.stringify(data),
       });
 
-      // Check if the request was successful (status code 200)
       if (response.ok) {
         const result = await response.json();
-        navigation.navigate('Login')
-
-        // Assuming registration is successful, trigger the onRegister callback
-        // onRegister();
         console.log('API Response:', JSON.stringify(result));
 
-        // You can use the result if needed (e.g., displaying BMR info)
-        console.log('BMR Info:', result.bmr_info);
+        navigation.navigate('Login');
       } else {
-        // Handle error cases
         Alert.alert('Error', 'Registration failed. Please try again.');
       }
     } catch (error) {
@@ -160,7 +158,7 @@ const RegisterPage = ({ onRegister ,navigation }) => {
   };
 
   return (
-    <ScrollView contentContainerStyle={styles.container}>
+    <View style={styles.container}>
       <Text style={styles.heading}>Register</Text>
       <TextInput
         style={styles.input}
@@ -176,19 +174,19 @@ const RegisterPage = ({ onRegister ,navigation }) => {
       <TextInput
         style={styles.input}
         placeholder="Height (cm)"
-        onChangeText={(text) => setHeightCm(parseFloat(text))}
+        onChangeText={(text) => setHeightCm(text)}
         keyboardType="numeric"
       />
       <TextInput
         style={styles.input}
         placeholder="Weight (kg)"
-        onChangeText={(text) => setWeightKg(parseFloat(text))}
+        onChangeText={(text) => setWeightKg(text)}
         keyboardType="numeric"
       />
       <TextInput
         style={styles.input}
         placeholder="Age"
-        onChangeText={(text) => setAge(parseFloat(text))}
+        onChangeText={(text) => setAge(text)}
         keyboardType="numeric"
       />
       <TextInput
@@ -196,21 +194,34 @@ const RegisterPage = ({ onRegister ,navigation }) => {
         placeholder="Gender"
         onChangeText={(text) => setGender(text)}
       />
-      <TextInput
-        style={styles.input}
-        placeholder="Activity Level"
-        onChangeText={(text) => setActivityLevel(text)}
-      />
+      <TouchableOpacity style={styles.input} onPress={() => setOpen(!open)}>
+        <Text>{activityLevel ? activityLevel : "Select Activity Level"}</Text>
+      </TouchableOpacity>
+      {open && (
+        <View style={styles.dropdown}>
+          {activityLevels.map((item) => (
+            <TouchableOpacity
+              key={item.value}
+              onPress={() => {
+                setActivityLevel(item.value);
+                setOpen(false);
+              }}
+            >
+              <Text>{item.label}</Text>
+            </TouchableOpacity>
+          ))}
+        </View>
+      )}
       <TouchableOpacity style={styles.button} onPress={handleRegister}>
         <Text style={styles.buttonText}>Register</Text>
       </TouchableOpacity>
-    </ScrollView>
+    </View>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
-    flexGrow: 1,
+    flex: 1,
     backgroundColor: '#eaf7fe',
     justifyContent: 'center',
     alignItems: 'center',
@@ -222,12 +233,22 @@ const styles = StyleSheet.create({
   },
   input: {
     width: '80%',
-    height: 40,
+    height: 45,
     borderColor: 'gray',
     borderWidth: 1,
     borderRadius: 5,
     marginBottom: 15,
     padding: 10,
+  },
+  dropdown: {
+    marginTop: 2,
+    width: '80%',
+    borderColor: '#3498db',
+    borderWidth: 1,
+    borderRadius: 5,
+    position: 'relative',
+    backgroundColor: '#dcecfa',
+    zIndex: 1,
   },
   button: {
     marginTop: 20,
