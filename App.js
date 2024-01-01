@@ -366,10 +366,10 @@ export default function MainApp() {
     <View style={styles.newContainer}>
       <NavigationContainer>
         <Stack.Navigator>
-          <Stack.Screen name="EntryPage" component={EntryPage} options={{ title: 'Nutrienest' }} />
+          <Stack.Screen name="EntryPage" component={EntryPage} options={{ title: 'Nutriwise' }} />
           <Stack.Screen name="Register" component={RegisterPage} options={{ title: 'Register' }} />
           <Stack.Screen name="Login" component={Login} options={{ title: 'Log In' }} />
-          <Stack.Screen name="MedicalRecords" component={MedicalRecords} options={{ title: 'Medical Records' }} />
+          <Stack.Screen name="MedicalRecords" component={MedicalRecords} options={{ title: 'Nutriwise' }} />
           <Stack.Screen name='CameraAction' component={CameraAction} userData={userData} />
         </Stack.Navigator>
       </NavigationContainer >

@@ -1,26 +1,32 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 
 export default function ToggleButtons({ showMacros, showNutrients, setShowMacros, setShowNutrients }) {
   return (
     <View style={styles.toggleButtonContainer}>
       <TouchableOpacity
-        style={[styles.toggleButton, showMacros && styles.activeToggleButton]}
+        style={[
+          styles.toggleButton,
+          showMacros ? styles.activeToggleButton : null,
+        ]}
         onPress={() => {
           setShowMacros(true);
           setShowNutrients(false);
         }}
       >
-        <Text style={styles.toggleButtonText}>Macros</Text>
+        <Text style={showMacros ? styles.activeButtonText : styles.toggleButtonText}>Macros</Text>
       </TouchableOpacity>
       <TouchableOpacity
-        style={[styles.toggleButton, showNutrients && styles.activeToggleButton]}
+        style={[
+          styles.toggleButton,
+          showNutrients ? styles.activeToggleButton : null,
+        ]}
         onPress={() => {
           setShowMacros(false);
           setShowNutrients(true);
         }}
       >
-        <Text style={styles.toggleButtonText}>Nutrients</Text>
+        <Text style={showNutrients ? styles.activeButtonText : styles.toggleButtonText}>Nutrients</Text>
       </TouchableOpacity>
     </View>
   );
@@ -39,17 +45,21 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: '#197cff',
     marginBottom: 10,
-    marginRight :10
+    marginRight: 10,
   },
   activeToggleButton: {
     backgroundColor: '#197cff',
-    color :'white'
   },
   toggleButtonText: {
     color: 'black',
     fontWeight: 'bold',
   },
+  activeButtonText: {
+    color: 'white',
+    fontWeight: 'bold',
+  },
 });
+
 // import React, { useState } from 'react';
 // import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 // import { Ionicons } from '@expo/vector-icons'; // Assuming you're using Expo for icons

@@ -1,9 +1,8 @@
 import React from 'react';
 import { View, Text, StyleSheet } from 'react-native';
-import { PieChart } from 'react-native-svg-charts'; // You might need to install this package
+import { PieChart } from 'react-native-svg-charts';
 
 const MacroDonut = () => {
-  // Replace these values with your actual macro values
   const carbs = 150;
   const protein = 80;
   const fats = 50;
@@ -13,17 +12,17 @@ const MacroDonut = () => {
     {
       key: 1,
       amount: carbs,
-      svg: { fill: '#00aaff' }, // Light blue for carbs
+      svg: { fill: '#4CAF50' },
     },
     {
       key: 2,
       amount: protein,
-      svg: { fill: '#ff69b4' }, // Pink for protein
+      svg: { fill: '#2196F3' },
     },
     {
       key: 3,
       amount: fats,
-      svg: { fill: '#ffd700' }, // Yellow for fats
+      svg: { fill: '#FFC107' },
     },
   ];
 
@@ -32,15 +31,24 @@ const MacroDonut = () => {
       <PieChart
         style={styles.pieChart}
         data={data}
-        innerRadius="50%"
+        innerRadius="60%"
         padAngle={0.03}
       />
-      <View style={styles.macroValues}>
-        <Text style={styles.macroText}>{carbs}g Carbs</Text>
-        <Text style={styles.macroText}>{protein}g Protein</Text>
-        <Text style={styles.macroText}>{fats}g Fats</Text>
-        <Text style={styles.caloriesText}>{totalCalories} Calories</Text>
+      <View style={styles.legendContainer}>
+        <View style={styles.legendItem}>
+          <View style={[styles.legendColor, { backgroundColor: '#4CAF50' }]} />
+          <Text style={styles.legendText}>{carbs}g Carbs</Text>
+        </View>
+        <View style={styles.legendItem}>
+          <View style={[styles.legendColor, { backgroundColor: '#2196F3' }]} />
+          <Text style={styles.legendText}>{protein}g Protein</Text>
+        </View>
+        <View style={styles.legendItem}>
+          <View style={[styles.legendColor, { backgroundColor: '#FFC107' }]} />
+          <Text style={styles.legendText}>{fats}g Fats</Text>
+        </View>
       </View>
+      <Text style={styles.caloriesText}>{totalCalories} Calories</Text>
     </View>
   );
 };
@@ -49,23 +57,42 @@ const styles = StyleSheet.create({
   container: {
     alignItems: 'center',
     justifyContent: 'center',
+    backgroundColor: 'white',
+    borderRadius: 10,
+    padding: 20,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
+    elevation: 5,
   },
   pieChart: {
-    height: 150,
-    width: 150,
+    height: 200,
+    width: 200,
   },
-  macroValues: {
+  legendContainer: {
     flexDirection: 'row',
-    justifyContent: 'center',
+    justifyContent: 'space-around',
     marginTop: 10,
   },
-  macroText: {
-    marginHorizontal: 10,
-    color: 'white',
+  legendItem: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  legendColor: {
+    width: 16,
+    height: 16,
+    borderRadius: 8,
+    marginRight: 5,
+  },
+  legendText: {
+    fontSize: 14,
   },
   caloriesText: {
-    marginTop: 5,
-    color: 'white',
+    marginTop: 10,
+    fontSize: 18,
+    fontWeight: 'bold',
+    color: '#333',
   },
 });
 

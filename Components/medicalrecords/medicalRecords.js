@@ -7,61 +7,16 @@ import arrowRight from '../../assets/chevron-down-rt.png'
 import searchBtn from '../../assets/search.png'
 import MedicalCard from './medicalDetails';
 
+
 const MedicalRecords = ({ navigation }) => {
-    const [search, setSearch] = useState()
+    
 
 
 
     return (
 
         <>
-            <ScrollView contentContainerStyle={styles.container}>
-                <TouchableOpacity
-                    onPress={() => navigation.navigate('CameraAction')}>
-                    <Text
-                        style={{
-                            backgroundColor: '#11B3CF',
-                            width: 160,
-                            textAlign : 'center',
-                            marginLeft : 'auto',
-                            padding : 8,
-                            borderRadius : 8,
-                            color : 'white',
-                            fontWeight : '600'
-                        }}
-                    >
-                        Calculate Nutrient
-                    </Text>
-                </TouchableOpacity>
-                <View>
-                    <Text style={styles.sw_heading}>Switch Profile</Text>
-                </View>
-
-                <TouchableOpacity >
-                    <View style={userProfileStyles.profileContainer}>
-                        {/* <Image source={profileImage} style={userProfileStyles.profilePicture} /> */}
-                        <View style={userProfileStyles.userInfo}>
-                            <Text style={userProfileStyles.userName}>Affan Mirza</Text>
-                            <Text style={userProfileStyles.userAge}>Age 23</Text>
-                        </View>
-
-                        <View style={userProfileStyles.arrow_rt}>
-                            <Image source={arrowRight} />
-                        </View>
-                    </View>
-                </TouchableOpacity>
-
-                <View style={searchStyles.input_wrapper}>
-                    <TextInput
-                        style={searchStyles.input}
-                        placeholder="Search Your Report"
-                        onChangeText={(text) => setSearch(text)}
-                        keyboardType="email-address"
-                    />
-                    <TouchableOpacity style={searchStyles.button}>
-                        <Image source={searchBtn} />
-                    </TouchableOpacity>
-                </View>
+            <ScrollView contentContainerStyle={styles.container}> 
                 <MedicalCard />
             </ScrollView>
 

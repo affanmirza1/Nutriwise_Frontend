@@ -1,15 +1,15 @@
-import React, { useState, useRef } from 'react';
-import { View, StyleSheet, Text, TextInput, Image, TouchableOpacity, ScrollView, ActivityIndicator, Alert } from 'react-native';
+import React, { useState, useRef, useEffect } from 'react';
+import { View, StyleSheet, ActivityIndicator, TouchableOpacity, Text } from 'react-native';
+import { Camera } from 'expo-camera';
+import { Ionicons } from '@expo/vector-icons';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import MenuBar from '../Togglebutton';
 import CameraComponent from '../Camera';
 import CapturedImageComponent from '../CapturedImage';
 import MacrosComponent from '../Macros';
 import NutrientsComponent from '../Nutrients';
-import { Camera } from 'expo-camera';
-import { Ionicons } from '@expo/vector-icons';
-import AsyncStorage from '@react-native-async-storage/async-storage';
 
-const CameraAction = ({ userData }) => {
+const CameraAction = ({ userData: propUserData }) => {
     const [hasPermission, setHasPermission] = useState(null);
     const [showCamera, setShowCamera] = useState(false);
     const [capturedImage, setCapturedImage] = useState(null);
@@ -19,6 +19,10 @@ const CameraAction = ({ userData }) => {
     const [isLoading, setIsLoading] = useState(false);
     const cameraRef = useRef(null);
 
+    useEffect(() => {
+        askForCameraPermission();
+    }, []);
+
     const askForCameraPermission = async () => {
         const { status } = await Camera.requestCameraPermissionsAsync();
         setHasPermission(status === 'granted');
@@ -27,19 +31,14 @@ const CameraAction = ({ userData }) => {
     const takePicture = async () => {
         if (cameraRef.current) {
             try {
+                await cameraRef.current.stopRecording(); // Stop the camera before taking another picture
                 const photo = await cameraRef.current.takePictureAsync();
                 setCapturedImage(photo.uri);
                 setIsLoading(true);
 
-                // Retrieve user data from local storage
                 const storedUserData = await AsyncStorage.getItem('user_data');
-
-                // Parse the JSON data
                 const userData = JSON.parse(storedUserData);
-
-                // Extract user's email
-                const userEmail = userData.email;
-                const email = await AsyncStorage.getItem('email');
+                const email = userData.email;
 
                 const data = new FormData();
                 data.append('image', {
@@ -47,19 +46,16 @@ const CameraAction = ({ userData }) => {
                     type: 'image/jpeg',
                     name: 'image.jpg',
                 });
-
-                // Include user's email in the API request
                 data.append('email', email);
 
-                fetch('http://192.168.80.12:5000/upload', {
+                fetch('http://192.168.18.211:5000/upload', {
                     method: 'POST',
                     body: data,
                 })
                     .then((response) => response.json())
-                    .then((data) => {
-                        setApiResponse(data);
+                    .then((responseData) => {
+                        setApiResponse(responseData);
                         setIsLoading(false);
-                        // console.log('API Response:', data);
                     })
                     .catch((error) => {
                         console.error('API Error:', error);
@@ -83,7 +79,7 @@ const CameraAction = ({ userData }) => {
         setShowCamera(false);
     };
 
-    userData = async () => {
+    const getUserData = async () => {
         return await AsyncStorage.getItem('user_data');
     };
 
@@ -96,7 +92,7 @@ const CameraAction = ({ userData }) => {
                         showNutrients={showNutrients}
                         setShowMacros={setShowMacros}
                         setShowNutrients={setShowNutrients}
-                        userData={userData}
+                        userData={getUserData}
                     />
                 )}
 
@@ -106,9 +102,9 @@ const CameraAction = ({ userData }) => {
                     </View>
                 ) : !showCamera && !capturedImage ? (
                     showMacros ? (
-                        <MacrosComponent userData={userData} />
+                        <MacrosComponent userData={getUserData} />
                     ) : (
-                        showNutrients && <NutrientsComponent userData={userData} />
+                        showNutrients && <NutrientsComponent userData={getUserData} />
                     )
                 ) : showCamera ? (
                     capturedImage ? (
@@ -143,17 +139,15 @@ const styles = StyleSheet.create({
         flex: 1,
     },
     cameraIcon: {
-        position: 'relative',
+        position: 'absolute',
         bottom: 45,
         width: 75,
         height: 75,
         right: 15,
-        marginLeft: 'auto',
         backgroundColor: 'black',
         borderRadius: 50,
         justifyContent: 'center',
         alignItems: 'center',
-        textAlign: 'center',
     },
     cameraIconBg: {
         backgroundColor: '#11B3CF33',

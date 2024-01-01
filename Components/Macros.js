@@ -1,742 +1,40 @@
-// import React, { useState, useEffect } from 'react';
-// import { View, Text, StyleSheet } from 'react-native';
-// import { Svg, Circle, Text as SvgText } from 'react-native-svg';
-
-// const MacrosComponent = () => {
-//   const radius = 80;
-//   const circumference = 2 * Math.PI * radius;
-//   const calorieValue = 100;
-
-//   const [macros, setMacros] = useState({
-//     carbs: 50,
-//     protein: 30,
-//     fats: 20,
-//   });
-
-//   const [carbsOffset, setCarbsOffset] = useState(1);
-//   const [proteinOffset, setProteinOffset] = useState(1);
-//   const [fatsOffset, setFatsOffset] = useState(1);
-
-//   useEffect(() => {
-//     const animateValues = () => {
-//       const carbsEnd = (macros.carbs / 100) * circumference;
-//       const proteinEnd = (macros.protein / 100) * circumference;
-//       const fatsEnd = (macros.fats / 100) * circumference;
-
-//       let animationValue = 0;
-
-//       const animate = setInterval(() => {
-//         if (animationValue < carbsEnd) {
-//           setCarbsOffset(animationValue);
-//         }
-
-//         if (animationValue < proteinEnd) {
-//           setProteinOffset(animationValue);
-//         }
-
-//         if (animationValue < fatsEnd) {
-//           setFatsOffset(animationValue);
-//         }
-
-//         animationValue += 6.5;
-
-//         if (animationValue >= Math.max(carbsEnd, proteinEnd, fatsEnd)) {
-//           clearInterval(animate);
-//         }
-//       }, 10);
-//     };
-
-//     const animateTimeout = setTimeout(() => {
-//       animateValues();
-//     }, 100);
-
-//     return () => {
-//       clearTimeout(animateTimeout);
-//       setCarbsOffset(0);
-//       setProteinOffset(0);
-//       setFatsOffset(0);
-//     };
-//   }, [macros]);
-
-//   return (
-//     <View style={styles.container}>
-//       <View style={styles.cardContainer}>
-//         <View style={styles.iconContainer}>
-//           <View style={styles.donutContainer}>
-//             <Svg width={radius * 2} height={radius * 2}>
-//               <Circle
-//                 cx={radius}
-//                 cy={radius}
-//                 r={radius - 10}
-//                 stroke="rgba(0, 0, 0, 0.3)"
-//                 strokeWidth="12"
-//                 fill="transparent"
-//               />
-//               <Circle
-//                 cx={radius}
-//                 cy={radius}
-//                 r={radius - 10}
-//                 stroke="#1affe8"
-//                 strokeWidth="12"
-//                 fill="transparent"
-//                 strokeDasharray={`${carbsOffset} ${circumference}`}
-//                 strokeLinecap="round"
-//               />
-//               <Circle
-//                 cx={radius}
-//                 cy={radius}
-//                 r={radius - 10}
-//                 stroke="#ff7fcc"
-//                 strokeWidth="12"
-//                 fill="transparent"
-//                 strokeDasharray={`${proteinOffset} ${circumference}`}
-//                 strokeDashoffset={carbsOffset}
-//                 strokeLinecap="round"
-//               />
-//               <Circle
-//                 cx={radius}
-//                 cy={radius}
-//                 r={radius - 10}
-//                 stroke="#ffc21a"
-//                 strokeWidth="12"
-//                 fill="transparent"
-//                 strokeDasharray={`${fatsOffset} ${circumference}`}
-//                 strokeDashoffset={carbsOffset + proteinOffset}
-//                 strokeLinecap="round"
-//               />
-//               <SvgText x={radius} y={radius} textAnchor="middle" dominantBaseline="central" fontSize="16" fill="white">
-//                 {calorieValue} cal
-//               </SvgText>
-//             </Svg>
-//           </View>
-//           <View style={styles.macroValues}>
-//             <View style={styles.macroValue}>
-//               <View style={[styles.macroIndicator, { backgroundColor: '#1affe8' }]} />
-//               <Text style={styles.macroText}>Carbs: {macros.carbs}%</Text>
-//             </View>
-//             <View style={styles.macroValue}>
-//               <View style={[styles.macroIndicator, { backgroundColor: '#ff7fcc' }]} />
-//               <Text style={styles.macroText}>Protein: {macros.protein}%</Text>
-//             </View>
-//             <View style={styles.macroValue}>
-//               <View style={[styles.macroIndicator, { backgroundColor: '#ffc21a' }]} />
-//               <Text style={styles.macroText}>Fats: {macros.fats}%</Text>
-//             </View>
-//           </View>
-//         </View>
-//       </View>
-//     </View>
-//   );
-// };
-
-// const styles = StyleSheet.create({
-//   container: {
-//     justifyContent: 'center',
-//     alignItems: 'center',
-//     marginTop: 50,
-//   },
-//   cardContainer: {
-//     width: '90%',
-//     backgroundColor: 'rgba(25, 124, 255, 0.8)',
-//     borderRadius: 20,
-//     padding: 20,
-//     marginBottom: 380,
-//   },
-//   iconContainer: {
-//     justifyContent: 'center',
-//     alignItems: 'center',
-//   },
-//   donutContainer: {
-//     position: 'relative',
-//     alignItems: 'center',
-//   },
-//   macroValues: {
-//     flexDirection: 'row',
-//     justifyContent: 'space-between',
-//     width: '100%',
-//     marginTop: 10,
-//   },
-//   macroValue: {
-//     flexDirection: 'row',
-//     alignItems: 'center',
-//   },
-//   macroIndicator: {
-//     width: 10,
-//     height: 10,
-//     borderRadius: 5,
-//     marginRight: 5,
-//   },
-//   macroText: {
-//     color: 'white',
-//   },
-// });
-
-// export default MacrosComponent;
-
-
-// import React, { useState, useEffect } from 'react';
-// import { View, Text, StyleSheet } from 'react-native';
-// import { Svg, Circle, Text as SvgText } from 'react-native-svg';
-
-// const MacrosComponent = ({ userData }) => {
-//   const radius = 80;
-//   const circumference = 2 * Math.PI * radius;
-//   const calorieValue = 100;
-
-//   const [macros, setMacros] = useState({
-//     carbs: 50,
-//     protein: 30,
-//     fats: 20,
-//   });
-
-//   const [carbsOffset, setCarbsOffset] = useState(1);
-//   const [proteinOffset, setProteinOffset] = useState(1);
-//   const [fatsOffset, setFatsOffset] = useState(1);
-
-//   useEffect(() => {
-//     const animateValues = () => {
-//       const carbsEnd = (macros.carbs / 100) * circumference;
-//       const proteinEnd = (macros.protein / 100) * circumference;
-//       const fatsEnd = (macros.fats / 100) * circumference;
-
-//       let animationValue = 0;
-
-//       const animate = setInterval(() => {
-//         if (animationValue < carbsEnd) {
-//           setCarbsOffset(animationValue);
-//         }
-
-//         if (animationValue < proteinEnd) {
-//           setProteinOffset(animationValue);
-//         }
-
-//         if (animationValue < fatsEnd) {
-//           setFatsOffset(animationValue);
-//         }
-
-//         animationValue += 6.5;
-
-//         if (animationValue >= Math.max(carbsEnd, proteinEnd, fatsEnd)) {
-//           clearInterval(animate);
-//         }
-//       }, 10);
-//     };
-
-//     const animateTimeout = setTimeout(() => {
-//       animateValues();
-//     }, 100);
-
-//     return () => {
-//       clearTimeout(animateTimeout);
-//       setCarbsOffset(0);
-//       setProteinOffset(0);
-//       setFatsOffset(0);
-//     };
-//   }, [macros]);
-
-//   // Update the user's macros if available in the user data
-//   useEffect(() => {
-//     if (userData && userData.macros) {
-//       setMacros(userData.macros);
-//     }
-//   }, [userData]);
-
-//   return (
-//     <View style={styles.container}>
-//       <View style={styles.cardContainer}>
-//         <View style={styles.iconContainer}>
-//           <View style={styles.donutContainer}>
-//             <Svg width={radius * 2} height={radius * 2}>
-//               <Circle
-//                 cx={radius}
-//                 cy={radius}
-//                 r={radius - 10}
-//                 stroke="rgba(0, 0, 0, 0.3)"
-//                 strokeWidth="12"
-//                 fill="transparent"
-//               />
-//               <Circle
-//                 cx={radius}
-//                 cy={radius}
-//                 r={radius - 10}
-//                 stroke="#1affe8"
-//                 strokeWidth="12"
-//                 fill="transparent"
-//                 strokeDasharray={`${carbsOffset} ${circumference}`}
-//                 strokeLinecap="round"
-//               />
-//               <Circle
-//                 cx={radius}
-//                 cy={radius}
-//                 r={radius - 10}
-//                 stroke="#ff7fcc"
-//                 strokeWidth="12"
-//                 fill="transparent"
-//                 strokeDasharray={`${proteinOffset} ${circumference}`}
-//                 strokeDashoffset={carbsOffset}
-//                 strokeLinecap="round"
-//               />
-//               <Circle
-//                 cx={radius}
-//                 cy={radius}
-//                 r={radius - 10}
-//                 stroke="#ffc21a"
-//                 strokeWidth="12"
-//                 fill="transparent"
-//                 strokeDasharray={`${fatsOffset} ${circumference}`}
-//                 strokeDashoffset={carbsOffset + proteinOffset}
-//                 strokeLinecap="round"
-//               />
-//               <SvgText x={radius} y={radius} textAnchor="middle" dominantBaseline="central" fontSize="16" fill="white">
-//                 {calorieValue} cal
-//               </SvgText>
-//             </Svg>
-//           </View>
-//           <View style={styles.macroValues}>
-//             <View style={styles.macroValue}>
-//               <View style={[styles.macroIndicator, { backgroundColor: '#1affe8' }]} />
-//               <Text style={styles.macroText}>Carbs: {macros.carbs}%</Text>
-//             </View>
-//             <View style={styles.macroValue}>
-//               <View style={[styles.macroIndicator, { backgroundColor: '#ff7fcc' }]} />
-//               <Text style={styles.macroText}>Protein: {macros.protein}%</Text>
-//             </View>
-//             <View style={styles.macroValue}>
-//               <View style={[styles.macroIndicator, { backgroundColor: '#ffc21a' }]} />
-//               <Text style={styles.macroText}>Fats: {macros.fats}%</Text>
-//             </View>
-//           </View>
-//         </View>
-//       </View>
-//     </View>
-//   );
-// };
-
-// const styles = StyleSheet.create({
-//   container: {
-//     justifyContent: 'center',
-//     alignItems: 'center',
-//     marginTop: 50,
-//   },
-//   cardContainer: {
-//     width: '90%',
-//     backgroundColor: 'rgba(25, 124, 255, 0.8)',
-//     borderRadius: 20,
-//     padding: 20,
-//     marginBottom: 380,
-//   },
-//   iconContainer: {
-//     justifyContent: 'center',
-//     alignItems: 'center',
-//   },
-//   donutContainer: {
-//     position: 'relative',
-//     alignItems: 'center',
-//   },
-//   macroValues: {
-//     flexDirection: 'row',
-//     justifyContent: 'space-between',
-//     width: '100%',
-//     marginTop: 10,
-//   },
-//   macroValue: {
-//     flexDirection: 'row',
-//     alignItems: 'center',
-//   },
-//   macroIndicator: {
-//     width: 10,
-//     height: 10,
-//     borderRadius: 5,
-//     marginRight: 5,
-//   },
-//   macroText: {
-//     color: 'white',
-//   },
-// });
-
-// export default MacrosComponent;
-
-// import React, { useState, useEffect } from 'react';
-// import { View, Text, StyleSheet } from 'react-native';
-// import { Svg, Circle, Text as SvgText } from 'react-native-svg';
-
-// const MacrosComponent = ({ userData }) => {
-//   const radius = 80;
-
-//   const [macros, setMacros] = useState({
-//     carbs: 0,
-//     protein: 0,
-//     fats: 0,
-//   });
-
-//   const [carbsOffset, setCarbsOffset] = useState(0);
-//   const [proteinOffset, setProteinOffset] = useState(0);
-//   const [fatsOffset, setFatsOffset] = useState(0);
-
-//   useEffect(() => {
-//     const fetchData = async () => {
-//       try {
-//         if (userData && userData.email) {
-//           // Fetch data from the API using the user's email
-//           const response = await fetch(`http://192.168.18.150:5000/get_user_data?email=${userData.email}`);
-//           const data = await response.json();
-
-//           // Extract relevant data from the API response
-//           const bmr = data.user_data.bmr_info.bmr;
-//           const protein = Math.round(data.user_data.nutrients_intake[0][0].protein_g * 4);
-//           const carbs = Math.round(data.user_data.nutrients_intake[0][0].carbohydrates_total_g * 4);
-//           const fats = Math.round(data.user_data.nutrients_intake[0][0].fat_total_g * 9);
-
-//           // Update the state with the fetched data
-//           setMacros({
-//             carbs,
-//             protein,
-//             fats,
-//           });
-
-//           // Trigger animation here if needed
-//         }
-//       } catch (error) {
-//         console.error('Error fetching data:', error);
-//       }
-//     };
-
-//     // Call the fetchData function when the component mounts or when the userData changes
-//     fetchData();
-//   }, [userData]);
-
-//   useEffect(() => {
-//     const animateValues = () => {
-//       const carbsEnd = (macros.carbs / 100) * bmrCircumference;
-//       const proteinEnd = (macros.protein / 100) * bmrCircumference;
-//       const fatsEnd = (macros.fats / 100) * bmrCircumference;
-
-//       let animationValue = 0;
-
-//       const animate = setInterval(() => {
-//         if (animationValue < carbsEnd) {
-//           setCarbsOffset(animationValue);
-//         }
-
-//         if (animationValue < proteinEnd) {
-//           setProteinOffset(animationValue);
-//         }
-
-//         if (animationValue < fatsEnd) {
-//           setFatsOffset(animationValue);
-//         }
-
-//         animationValue += 6.5;
-
-//         if (animationValue >= Math.max(carbsEnd, proteinEnd, fatsEnd)) {
-//           clearInterval(animate);
-//         }
-//       }, 10);
-//     };
-
-//     const animateTimeout = setTimeout(() => {
-//       animateValues();
-//     }, 100);
-
-//     return () => {
-//       clearTimeout(animateTimeout);
-//       setCarbsOffset(0);
-//       setProteinOffset(0);
-//       setFatsOffset(0);
-//     };
-//   }, [macros]);
-
-//   // Assuming totalBMR is received from the API response
-//   const totalBMR = macros.carbs + macros.protein + macros.fats;
-
-//   // Calculate the circumference based on the total BMR
-//   const bmrCircumference = 2 * Math.PI * radius * (totalBMR / 100);
-
-//   return (
-//     <View style={styles.container}>
-//       <View style={styles.cardContainer}>
-//         <View style={styles.iconContainer}>
-//           <View style={styles.donutContainer}>
-//             <Svg width={radius * 2} height={radius * 2}>
-//               <Circle
-//                 cx={radius}
-//                 cy={radius}
-//                 r={radius - 10}
-//                 stroke="rgba(0, 0, 0, 0.3)"
-//                 strokeWidth="12"
-//                 fill="transparent"
-//               />
-//               <Circle
-//                 cx={radius}
-//                 cy={radius}
-//                 r={radius - 10}
-//                 stroke="#1affe8"
-//                 strokeWidth="12"
-//                 fill="transparent"
-//                 strokeDasharray={`${carbsOffset} ${bmrCircumference}`}
-//                 strokeLinecap="round"
-//               />
-//               <Circle
-//                 cx={radius}
-//                 cy={radius}
-//                 r={radius - 10}
-//                 stroke="#ff7fcc"
-//                 strokeWidth="12"
-//                 fill="transparent"
-//                 strokeDasharray={`${proteinOffset} ${bmrCircumference}`}
-//                 strokeDashoffset={carbsOffset}
-//                 strokeLinecap="round"
-//               />
-//               <Circle
-//                 cx={radius}
-//                 cy={radius}
-//                 r={radius - 10}
-//                 stroke="#ffc21a"
-//                 strokeWidth="12"
-//                 fill="transparent"
-//                 strokeDasharray={`${fatsOffset} ${bmrCircumference}`}
-//                 strokeDashoffset={carbsOffset + proteinOffset}
-//                 strokeLinecap="round"
-//               />
-//               <SvgText x={radius} y={radius} textAnchor="middle" dominantBaseline="central" fontSize="16" fill="white">
-//                 {/* {totalBMR} cal */}
-//               </SvgText>
-//             </Svg>
-//           </View>
-//           <View style={styles.macroValues}>
-//             <View style={styles.macroValue}>
-//               <View style={[styles.macroIndicator, { backgroundColor: '#1affe8' }]} />
-//               <Text style={styles.macroText}>Carbs: {macros.carbs}</Text>
-//             </View>
-//             <View style={styles.macroValue}>
-//               <View style={[styles.macroIndicator, { backgroundColor: '#ff7fcc' }]} />
-//               <Text style={styles.macroText}>Protein: {macros.protein}</Text>
-//             </View>
-//             <View style={styles.macroValue}>
-//               <View style={[styles.macroIndicator, { backgroundColor: '#ffc21a' }]} />
-//               <Text style={styles.macroText}>Fats: {macros.fats}</Text>
-//             </View>
-//           </View>
-//         </View>
-//       </View>
-//     </View>
-//   );
-// };
-
-// const styles = StyleSheet.create({
-//   container: {
-//     justifyContent: 'center',
-//     alignItems: 'center',
-//     marginTop: 50,
-//   },
-//   cardContainer: {
-//     width: '90%',
-//     backgroundColor: 'rgba(25, 124, 255, 0.8)',
-//     borderRadius: 20,
-//     padding: 20,
-//     marginBottom: 380,
-//   },
-//   iconContainer: {
-//     justifyContent: 'center',
-//     alignItems: 'center',
-//   },
-//   donutContainer: {
-//     position: 'relative',
-//     alignItems: 'center',
-//   },
-//   macroValues: {
-//     flexDirection: 'row',
-//     justifyContent: 'space-between',
-//     width: '100%',
-//     marginTop: 10,
-//   },
-//   macroValue: {
-//     flexDirection: 'row',
-//     alignItems: 'center',
-//   },
-//   macroIndicator: {
-//     width: 10,
-//     height: 10,
-//     borderRadius: 5,
-//     marginRight: 5,
-//   },
-//   macroText: {
-//     color: 'white',
-//   },
-// });
-
-// export default MacrosComponent;
-// import React, { useState, useEffect } from 'react';
-// import { View, Text, StyleSheet } from 'react-native';
-// import { Svg, Circle, Text as SvgText } from 'react-native-svg';
-
-// const MacrosComponent = ({ userData }) => {
-//   const radius = 80;
-
-//   const [macros, setMacros] = useState({
-//     carbs: 0,
-//     protein: 0,
-//     fats: 0,
-//   });
-
-//   const [carbsOffset, setCarbsOffset] = useState(0);
-//   const [proteinOffset, setProteinOffset] = useState(0);
-//   const [fatsOffset, setFatsOffset] = useState(0);
-//   const [bmrCircumference, setBmrCircumference] = useState(0);
-
-//   useEffect(() => {
-//     const fetchData = async () => {
-//       try {
-//         if (userData && userData.email) {
-//           const response = await fetch(`http://192.168.18.150:5000/get_user_data?email=${userData.email}`);
-//           const data = await response.json();
-
-//           const bmr = data.user_data.bmr_info.bmr;
-//           const protein = Math.round(data.user_data.nutrients_intake[0][0].protein_g * 4);
-//           const carbs = Math.round(data.user_data.nutrients_intake[0][0].carbohydrates_total_g * 4);
-//           const fats = Math.round(data.user_data.nutrients_intake[0][0].fat_total_g * 9);
-
-//           setMacros({
-//             carbs,
-//             protein,
-//             fats,
-//           });
-
-//           setBmrCircumference(bmr);
-
-//           // Set offset values directly
-//           setProteinOffset(protein);
-//           setCarbsOffset(protein + carbs);
-//           setFatsOffset(protein + carbs + fats);
-          
-//         }
-//       } catch (error) {
-//         console.error('Error fetching data:', error);
-//       }
-//     };
-
-//     fetchData();
-//   }, [userData]);
-
-//   return (
-//     <View style={styles.container}>
-//       <View style={styles.cardContainer}>
-//         <View style={styles.iconContainer}>
-//           <View style={styles.donutContainer}>
-//             <Svg width={radius * 2} height={radius * 2}>
-//               <Circle
-//                 cx={radius}
-//                 cy={radius}
-//                 r={radius - 10}
-//                 stroke="rgba(0, 0, 0, 0.3)"
-//                 strokeWidth="12"
-//                 fill="transparent"
-//               />
-//               <Circle
-//                 cx={radius}
-//                 cy={radius}
-//                 r={radius - 10}
-//                 stroke="#1affe8"
-//                 strokeWidth="12"
-//                 fill="transparent"
-//                 strokeDasharray={`${macros.protein} ${bmrCircumference-macros.protein}`}
-//                 strokeLinecap="round"
-//               />
-//               <Circle
-//                 cx={radius}
-//                 cy={radius}
-//                 r={radius - 10}
-//                 stroke="#ff7fcc"
-//                 strokeWidth="12"
-//                 fill="transparent"
-//                 strokeDasharray={`${macros.carbs} ${ bmrCircumference-(macros.protein+macros.carbs)}`}
-//                 strokeLinecap="round"
-//               />
-//               <Circle
-//                 cx={radius}
-//                 cy={radius}
-//                 r={radius - 10}
-//                 stroke="#ffc21a"
-//                 strokeWidth="12"
-//                 fill="transparent"
-//                 strokeDasharray={`${macros.fats} ${bmrCircumference-(macros.protein+macros.fats+macros.carbs)}`}
-//                 strokeLinecap="round"
-//               />
-//               <SvgText x={radius} y={radius} textAnchor="middle" dominantBaseline="central" fontSize="16" fill="white">
-//                 {macros.carbs + macros.protein + macros.fats} cal
-//               </SvgText>
-//             </Svg>
-//           </View>
-//           <View style={styles.macroValues}>
-//             <View style={styles.macroValue}>
-//               <View style={[styles.macroIndicator, { backgroundColor: '#1affe8' }]} />
-//               <Text style={styles.macroText}>Protein: {macros.protein}</Text>
-//             </View>
-//             <View style={styles.macroValue}>
-//               <View style={[styles.macroIndicator, { backgroundColor: '#ff7fcc' }]} />
-//               <Text style={styles.macroText}>Carbs: {macros.carbs}</Text>
-//             </View>
-//             <View style={styles.macroValue}>
-//               <View style={[styles.macroIndicator, { backgroundColor: '#ffc21a' }]} />
-//               <Text style={styles.macroText}>Fats: {macros.fats}</Text>
-//             </View>
-//           </View>
-//         </View>
-//       </View>
-//     </View>
-//   );
-// };
-
-// const styles = StyleSheet.create({
-//   container: {
-//     justifyContent: 'center',
-//     alignItems: 'center',
-//     marginTop: 50,
-//   },
-//   cardContainer: {
-//     width: '90%',
-//     backgroundColor: 'rgba(25, 124, 255, 0.8)',
-//     borderRadius: 20,
-//     padding: 20,
-//     marginBottom: 380,
-//   },
-//   iconContainer: {
-//     justifyContent: 'center',
-//     alignItems: 'center',
-//   },
-//   donutContainer: {
-//     position: 'relative',
-//     alignItems: 'center',
-//   },
-//   macroValues: {
-//     flexDirection: 'row',
-//     justifyContent: 'space-between',
-//     width: '100%',
-//     marginTop: 10,
-//   },
-//   macroValue: {
-//     flexDirection: 'row',
-//     alignItems: 'center',
-//   },
-//   macroIndicator: {
-//     width: 10,
-//     height: 10,
-//     borderRadius: 5,
-//     marginRight: 5,
-//   },
-//   macroText: {
-//     color: 'white',
-//   },
-// });
-
-// export default MacrosComponent;
 import React, { useState, useEffect } from 'react';
-import { View, Text, StyleSheet } from 'react-native';
-import { Svg, Circle, Text as SvgText } from 'react-native-svg';
+import {
+  View,
+  Text,
+  StyleSheet,
+  Animated,
+  Easing,
+  ImageBackground,
+} from 'react-native';
+import {
+  Svg,
+  Circle,
+  Line,
+  Text as SvgText,
+  Defs,
+  LinearGradient,
+  Stop,
+} from 'react-native-svg';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
+const calculateColor = (nutrient, value) => {
+  switch (nutrient) {
+    case 'protein':
+      return value > 50 ? '#ff7fcc' : '#f48fb1'; // Pink if high, light pink if low
+    case 'carbs':
+      return value > 50 ? '#1affe8' : '#4fc3f7'; // Cyan if high, light cyan if low
+    case 'fats':
+      return value > 50 ? '#ffc21a' : '#ffd54f'; // Yellow if high, light yellow if low
+    default:
+      return '#ffffff'; // Default to white if unknown nutrient
+  }
+};
+
 const MacrosComponent = ({ userData }) => {
+  const backgroundImage = require('../assets/game_ready_fruit__vegetable_asset_pack/wallpaper.jpg');
   const radius = 80;
+  const animationDuration = 1000;
 
   const [macros, setMacros] = useState({
     carbs: 0,
@@ -746,19 +44,29 @@ const MacrosComponent = ({ userData }) => {
 
   const [bmrCircumference, setBmrCircumference] = useState(0);
 
+  const [animatedValue] = useState(new Animated.Value(0));
+
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const email = await AsyncStorage.getItem('email')
+        const email = await AsyncStorage.getItem('email');
 
         if (userData && email) {
-          const response = await fetch(`http://192.168.80.12:5000/get_user_data?email=${email}`);
+          const response = await fetch(
+            `http://192.168.18.211:5000/get_user_data?email=${email}`
+          );
           const data = await response.json();
 
           const bmr = data.user_data.bmr_info.bmr;
-          const protein = Math.round(data.user_data.nutrients_intake[0][0].protein_g * 4);
-          const carbs = Math.round(data.user_data.nutrients_intake[0][0].carbohydrates_total_g * 4);
-          const fats = Math.round(data.user_data.nutrients_intake[0][0].fat_total_g * 9);
+          const protein = Math.round(
+            data.user_data.nutrients_intake[0][0].protein_g * 4
+          );
+          const carbs = Math.round(
+            data.user_data.nutrients_intake[0][0].carbohydrates_total_g * 4
+          );
+          const fats = Math.round(
+            data.user_data.nutrients_intake[0][0].fat_total_g * 9
+          );
 
           setMacros({
             carbs,
@@ -767,6 +75,14 @@ const MacrosComponent = ({ userData }) => {
           });
 
           setBmrCircumference(bmr);
+
+          // Trigger animation
+          Animated.timing(animatedValue, {
+            toValue: 1,
+            duration: animationDuration,
+            easing: Easing.out(Easing.ease),
+            useNativeDriver: false,
+          }).start();
         }
       } catch (error) {
         console.error('Error fetching data:', error);
@@ -774,116 +90,245 @@ const MacrosComponent = ({ userData }) => {
     };
 
     fetchData();
-  }, [userData]);
+  }, [animatedValue, userData]);
+
+  const animatedStroke = animatedValue.interpolate({
+    inputRange: [0, 1],
+    outputRange: ['#ff7fcc', '#1affe8'],
+  });
 
   return (
-    <View style={styles.container}>
+    <ImageBackground
+      source={backgroundImage}
+      style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}
+    >
       <View style={styles.cardContainer}>
         <View style={styles.iconContainer}>
-          <View style={styles.donutContainer}>
-            <Svg width={radius * 2} height={radius * 2}>
-              <Circle
-                cx={radius}
-                cy={radius}
-                r={radius - 10}
-                stroke="rgba(0, 0, 0, 0.3)"
-                strokeWidth="12"
-                fill="transparent"
-              />
-              <Circle
-                cx={radius}
-                cy={radius}
-                r={radius - 10}
-                stroke="#1affe8"
-                strokeWidth="12"
-                fill="transparent"
-                strokeDasharray={`${macros.protein} ${bmrCircumference - macros.carbs - macros.fats}`}
-                strokeLinecap="round"
-              />
-              <Circle
-                cx={radius}
-                cy={radius}
-                r={radius - 10}
-                stroke="#ff7fcc"
-                strokeWidth="12"
-                fill="transparent"
-                strokeDasharray={`${macros.carbs} ${bmrCircumference - macros.fats}`}
-                strokeLinecap="round"
-              />
-              <Circle
-                cx={radius}
-                cy={radius}
-                r={radius - 10}
-                stroke="#ffc21a"
-                strokeWidth="12"
-                fill="transparent"
-                strokeDasharray={`${macros.fats} ${bmrCircumference}`}
-                strokeLinecap="round"
-              />
-              <SvgText x={radius} y={radius} textAnchor="middle" dominantBaseline="central" fontSize="16" fill="white">
-                {macros.carbs + macros.protein + macros.fats} cal
-              </SvgText>
-            </Svg>
-          </View>
+          <Svg width={radius * 2} height={radius * 2}>
+            <Defs>
+              <LinearGradient id="gradient" x1="0%" y1="0%" x2="0%" y2="100%">
+                <Stop offset="0%" stopColor="#ff7fcc" />
+                <Stop offset="100%" stopColor="#1affe8" />
+              </LinearGradient>
+            </Defs>
+
+            <Circle
+              cx={radius}
+              cy={radius}
+              r={radius - 10}
+              stroke="url(#gradientBackground)"
+              strokeWidth="12"
+              fill="transparent"
+            />
+
+            <Circle
+              cx={radius}
+              cy={radius}
+              r={radius - 16}
+              stroke={animatedStroke}
+              strokeWidth="2"
+              fill="brown"
+              strokeDasharray={[
+                macros.protein,
+                macros.carbs, // Adjusted to prevent color mixing
+                macros.fats, // Adjusted to prevent color mixing
+                bmrCircumference - macros.protein - macros.carbs - macros.fats,
+              ]}
+              strokeLinecap="round"
+            />
+
+            <Defs>
+              <LinearGradient
+                id="gradientBackground"
+                x1="0%"
+                y1="60%"
+                x2="60%"
+                y2="100%"
+              >
+                <Stop
+                  offset="100%"
+                  stopColor={calculateColor('protein', macros.protein)}
+                />
+                <Stop
+                  offset={`${
+                    (macros.protein /
+                      (macros.protein + macros.carbs + macros.fats)) *
+                    100
+                  }%`}
+                  stopColor={calculateColor('carbs', macros.carbs)}
+                />
+                <Stop
+                  offset={`${
+                    ((macros.protein + macros.carbs) /
+                      (macros.protein + macros.carbs + macros.fats)) *
+                    100
+                  }%`}
+                  stopColor={calculateColor('fats', macros.fats)}
+                />
+              </LinearGradient>
+
+              <LinearGradient
+                id="gradientAnimated"
+                x1="0%"
+                y1="0%"
+                x2="0%"
+                y2="100%"
+              >
+                <Stop offset="0%" stopColor="#ff7fcc" />
+                <Stop offset="100%" stopColor="#1affe8" />
+              </LinearGradient>
+            </Defs>
+
+            <Line
+              x1={radius}
+              y1={radius}
+              x2={radius + (radius - 16) * Math.cos((macros.protein / bmrCircumference) * 2 * Math.PI)}
+              y2={radius + (radius - 16) * Math.sin((macros.protein / bmrCircumference) * 2 * Math.PI)}
+              stroke="pink"
+              strokeWidth="8"
+            />
+
+            <Line
+              x1={radius}
+              y1={radius}
+              x2={
+                radius +
+                (radius - 16) *
+                  Math.cos(
+                    ((macros.protein + macros.carbs) / bmrCircumference) *
+                      2 *
+                      Math.PI
+                  )
+              }
+              y2={
+                radius +
+                (radius - 16) *
+                  Math.sin(
+                    ((macros.protein + macros.carbs) / bmrCircumference) *
+                      2 *
+                      Math.PI
+                  )
+              }
+              stroke="#1affe8"
+              strokeWidth="6"
+            />
+
+            <Line
+              x1={radius}
+              y1={radius}
+              x2={
+                radius +
+                (radius - 16) *
+                  Math.cos(
+                    ((macros.protein + macros.carbs + macros.fats) /
+                      bmrCircumference) *
+                      2 *
+                      Math.PI
+                  )
+              }
+              y2={
+                radius +
+                (radius - 16) *
+                  Math.sin(
+                    ((macros.protein + macros.carbs + macros.fats) /
+                      bmrCircumference) *
+                      2 *
+                      Math.PI
+                  )
+              }
+              stroke="#ffc21a"
+              strokeWidth="4"
+            />
+
+            <SvgText
+              x={radius - 10}
+              y={radius + 10}
+              textAnchor="middle"
+              dominantBaseline="middle"
+              fontSize="22"
+              fontWeight="bold"
+              fill="white"
+            >
+              {macros.carbs + macros.protein + macros.fats} cal
+            </SvgText>
+          </Svg>
+
           <View style={styles.macroValues}>
             <View style={styles.macroValue}>
-              <View style={[styles.macroIndicator, { backgroundColor: '#1affe8' }]} />
-              <Text style={styles.macroText}>Protein: {macros.protein}</Text>
+              <View
+                style={[
+                  styles.macroIndicator,
+                  { backgroundColor: '#ff7fcc', marginBottom: 5, marginRight: 10 },
+                ]}
+              />
+              <Text style={[styles.macroText, { color: '#ff7fcc' }]}>
+                Protein: {macros.protein}g
+              </Text>
             </View>
             <View style={styles.macroValue}>
-              <View style={[styles.macroIndicator, { backgroundColor: '#ff7fcc' }]} />
-              <Text style={styles.macroText}>Carbs: {macros.carbs}</Text>
+              <View
+                style={[
+                  styles.macroIndicator,
+                  { backgroundColor: '#1affe8', marginBottom: 5, marginRight: 10 },
+                ]}
+              />
+              <Text style={[styles.macroText, { color: '#1affe8' }]}>
+                Carbs: {macros.carbs}g
+              </Text>
             </View>
             <View style={styles.macroValue}>
-              <View style={[styles.macroIndicator, { backgroundColor: '#ffc21a' }]} />
-              <Text style={styles.macroText}>Fats: {macros.fats}</Text>
+              <View
+                style={[
+                  styles.macroIndicator,
+                  { backgroundColor: '#ffc21a', marginBottom: 5, marginRight: 10 },
+                ]}
+              />
+              <Text style={[styles.macroText, { color: '#ffc21a' }]}>
+                Fats: {macros.fats}g
+              </Text>
             </View>
           </View>
         </View>
       </View>
-    </View>
+    </ImageBackground>
   );
 };
 
 const styles = StyleSheet.create({
-  container: {
-    justifyContent: 'center',
-    alignItems: 'center',
-    marginTop: 50,
-  },
   cardContainer: {
     width: '90%',
-    backgroundColor: 'rgba(25, 124, 255, 0.8)',
-    borderRadius: 20,
-    padding: 20,
-    marginBottom: 380,
+    backgroundColor: 'white',
+    borderRadius: 10,
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
+    elevation: 5,
   },
   iconContainer: {
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  donutContainer: {
-    position: 'relative',
+    padding: 20,
     alignItems: 'center',
   },
   macroValues: {
+    marginTop: 20,
     flexDirection: 'row',
-    justifyContent: 'space-between',
-    width: '100%',
-    marginTop: 10,
+    justifyContent: 'space-around',
   },
   macroValue: {
-    flexDirection: 'row',
     alignItems: 'center',
   },
   macroIndicator: {
-    width: 10,
-    height: 10,
-    borderRadius: 5,
-    marginRight: 5,
+    width: 12,
+    height: 12,
+    borderRadius: 6,
+    marginBottom: 5,
   },
   macroText: {
-    color: 'white',
+    color: '#555',
+    marginRight: 16,
   },
 });
 
