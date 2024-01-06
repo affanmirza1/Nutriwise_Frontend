@@ -1,48 +1,28 @@
+import appleGIF from '../../assets/game_ready_fruit__vegetable_asset_pack/doctor.gif';
 import React, { useEffect, useState } from 'react';
 import { View, StyleSheet, ScrollView, Animated, TouchableOpacity, Text, Image, ImageBackground } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useNavigation } from '@react-navigation/native';
-
-import fruitsAndVeggiesGIF from '../../assets/game_ready_fruit__vegetable_asset_pack/fruits-and-veggies.gif';
-import appleGIF from '../../assets/game_ready_fruit__vegetable_asset_pack/doctor.gif';
+import Food_Banner from '../../assets/game_ready_fruit__vegetable_asset_pack/Food_Banner.gif';
 import phy from '../../assets/game_ready_fruit__vegetable_asset_pack/phy.png';
+import Food from '../../assets/game_ready_fruit__vegetable_asset_pack/Food.png';
 
-const colorsArray = ['#FF5733', '#33FF57', '#5733FF', '#FF5733', '#33FF57', '#5733FF', '#FF5733', '#33FF57', '#5733FF', '#FF5733'];
+const colorsArray = ['#000'];
 
 const MedicalCard = () => {
   const [showAnimation, setShowAnimation] = useState(false);
-  const [currentSection, setCurrentSection] = useState("");
-  const [animatedSection] = useState(new Animated.Value(1));
-  const [animatedDoctor] = useState(new Animated.Value(0));
+  const [currentSection, setCurrentSection] = useState('');
   const [infoBulletColor, setInfoBulletColor] = useState(colorsArray[0]);
   const navigation = useNavigation();
   const backgroundImage = require('../../assets/game_ready_fruit__vegetable_asset_pack/wallpaper.jpg');
 
+  const [cloudVisible, setCloudVisible] = useState(true);
+  const [blinkAnimation] = useState(new Animated.Value(0));
+
   useEffect(() => {
-    const medRec = async () => {
-      const email = await AsyncStorage.getItem('email');
-
-      try {
-        const response = await fetch(`http://192.168.18.211:5000/get_medical_records?email=${email}`, {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-        });
-
-        const data = await response.json();
-        console.log(data);
-      } catch (error) {
-        console.error(error);
-      }
-    };
-
-    medRec();
-
     setTimeout(() => {
       setShowAnimation(true);
       animateText();
-      animateDoctor();
     }, 2500);
   }, []);
 
@@ -69,199 +49,112 @@ const MedicalCard = () => {
       setCurrentSection(sectionsArray[sectionIndex]);
       sectionIndex = (sectionIndex + 1) % sectionsArray.length;
 
+      setInfoBulletColor(color);
+
       Animated.sequence([
-        Animated.timing(animatedSection, {
+        Animated.timing(blinkAnimation, {
           toValue: 1,
-          duration: 0,
-          useNativeDriver: false,
+          duration: 2500,
+          useNativeDriver: true,
         }),
-        Animated.timing(animatedSection, {
+        Animated.timing(blinkAnimation, {
           toValue: 0,
           duration: 2500,
-          useNativeDriver: false,
+          useNativeDriver: true,
         }),
-      ]).start(({ finished }) => {
-        if (finished) {
+      ]).start(() => {
+        setCloudVisible(false);
+        setTimeout(() => {
+          setCloudVisible(true);
           animateNextSection();
-        }
+        }, 500);
       });
-
-      Animated.timing(animatedSection, {
-        toValue: 1,
-        duration: 0,
-        useNativeDriver: false,
-      }).start();
-
-      setInfoBulletColor(color);
     };
 
     animateNextSection();
-
-    const intervalId = setInterval(() => {
-      animateNextSection();
-    }, 4000);
-
-    return () => clearInterval(intervalId);
-  };
-
-  const animateDoctor = () => {
-    Animated.timing(animatedDoctor, {
-      toValue: 1,
-      duration: 4000,
-      useNativeDriver: true,
-    }).start();
   };
 
   return (
     <ImageBackground
       source={backgroundImage}
-      style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}
+      style={{ flex: 1, justifyContent: 'center', alignItems: 'center', padding: 0, margin: 0 }}
     >
-      
-        <ScrollView contentContainerStyle={{}}>
-          <View style={{ alignSelf: 'center' }}>
-            <Animated.Image
-              source={fruitsAndVeggiesGIF}
-              style={{
-                width: 300,
-                height: 300,
-                resizeMode: 'contain',
-                alignSelf: 'center',
-              }}
-            />
-          </View>
+      <ScrollView contentContainerStyle={{padding: 0, margin: 0 }}>
+        <View style={{ alignSelf: 'center' }}>
+          <Image
+            source={Food}
+            style={{
+              width: 350,
+              height: 300,
+              resizeMode: 'contain',
+              alignSelf: 'center',
+            }}
+          />
+        </View>
 
-          <View style={styles.cardContainer}>
-            <View style={styles.cardImageContainer}>
-              <Image source={phy} style={styles.cardImage} />
-            </View>
-            <View style={styles.cardTextContainer}>
-              <Text style={styles.cardHeading}>Nutrient Calculation</Text>
-              <TouchableOpacity
-                onPress={() => navigation.navigate('CameraAction')}
-                style={styles.cardButton}
-              >
-                <Text style={styles.cardButtonText}>Calculate Nutrients</Text>
-              </TouchableOpacity>
-            </View>
+        <View style={styles.cardContainer}>
+          <View style={styles.cardImageContainer}>
+            <Image source={phy} style={styles.cardImage} />
           </View>
+          <View style={styles.cardTextContainer}>
+            <Text style={styles.cardHeading}>TRACK YOUR HEALTH</Text>
+            <TouchableOpacity
+              onPress={() => navigation.navigate('CameraAction')}
+              style={styles.cardButton}
+            >
+              <Text style={styles.cardButtonText}>Calculate Nutrients</Text>
+            </TouchableOpacity>
+          </View>
+        </View>
 
-          <View>
-            {showAnimation && (
-              <Animated.View
-                style={[
-                  styles.infoContainer,
-                  {
-                    shadowColor: '#000',
-                    shadowOffset: {
-                      width: 0,
-                      height: 2,
-                    },
-                    shadowOpacity: 0.2,
-                    shadowRadius: 2,
-                  },
-                ]}
-              >
-                <View style={styles.pointer}></View>
-                <Animated.Text
-                  style={[
-                    styles.infoHeading,
-                    {
-                      color: infoBulletColor,
-                    },
-                  ]}
-                >
-                  Tips:
-                </Animated.Text>
-                <View style={styles.infoBulletContainer}>
-                  <Animated.Text
-                    style={[
-                      styles.infoBullet,
-                      {
-                        marginLeft: 15,
-                        color: infoBulletColor,
-                      },
-                    ]}
-                  >
-                    {currentSection}
-                  </Animated.Text>
-                </View>
-              </Animated.View>
-            )}
-          </View>
+        <View>
+          {showAnimation && (
+            <Animated.View
+              style={[
+                styles.cloudContainer,
+                {
+                  opacity: blinkAnimation,
+                  display: cloudVisible ? 'flex' : 'none',
+                },
+              ]}
+            >
+              <View style={styles.pointer}></View>
+              <View style={styles.cloudContent}>
+              <Text style={styles.cloudContent}>
+  <Text style={{ fontWeight: 'bold', marginBottom: 10 }}>Tips:{'\n'}</Text>
+  {currentSection}
+</Text>
 
-          <View style={{ alignSelf: 'center' }}>
-            <Animated.Image
-              source={appleGIF}
-              style={{
-                width: 100,
-                height: 200,
-                opacity: animatedDoctor,
-                transform: [
-                  {
-                    translateY: animatedDoctor.interpolate({
-                      inputRange: [0, 1],
-                      outputRange: [50, 0],
-                    }),
-                  },
-                ],
-              }}
-            />
-          </View>
-        </ScrollView>
-      
+
+                
+              </View>
+            </Animated.View>
+          )}
+        </View>
+
+        <View style={{ alignSelf: 'flex-end', marginRight: -10 }}>
+          <Animated.Image
+            source={appleGIF}
+            style={{
+              width: 100,
+              height: 200,
+              transform: [
+                {
+                  translateY: blinkAnimation.interpolate({
+                    inputRange: [0, 1],
+                    outputRange: [50, 0],
+                  }),
+                },
+              ],
+            }}
+          />
+        </View>
+      </ScrollView>
     </ImageBackground>
   );
 };
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: 'white',
-  },
-  heading: {
-    fontSize: 30,
-    fontWeight: 'bold',
-    textAlign: 'center',
-    marginBottom: 2,
-    color: 'white',
-  },
-  infoContainer: {
-    marginTop: 4,
-    padding: 10,
-    backgroundColor: '#f0f0f0',
-    borderRadius: 8,
-    position: 'relative',
-    marginBottom: 4,
-  },
-  pointer: {
-    position: 'absolute',
-    bottom: -8,
-    left: '50%',
-    marginLeft: -8,
-    width: 0,
-    height: 0,
-    borderLeftWidth: 12,
-    borderRightWidth: 12,
-    borderBottomWidth: 12,
-    borderLeftColor: 'transparent',
-    borderRightColor: 'transparent',
-    borderBottomColor: 'black',
-  },
-  infoHeading: {
-    fontSize: 20,
-    fontWeight: '800',
-    marginBottom: 4,
-    color: 'black',
-  },
-  infoBulletContainer: {
-    overflow: 'hidden',
-  },
-  infoBullet: {
-    fontSize: 16,
-    marginBottom: 3,
-    color: '#000',
-  },
   cardContainer: {
     flexDirection: 'row',
     marginBottom: 12,
@@ -272,12 +165,13 @@ const styles = StyleSheet.create({
     backgroundColor: '#ffffff',
     borderWidth: 0,
     shadowColor: '#000',
+    width: 350,
     shadowOffset: {
       width: 0,
-      height: 4,
+      height: 2,
     },
     shadowOpacity: 0.3,
-    shadowRadius: 6,
+    shadowRadius: 5,
     elevation: 18,
   },
   cardImageContainer: {
@@ -308,6 +202,50 @@ const styles = StyleSheet.create({
     fontSize: 13,
     fontWeight: 'bold',
   },
+  cloudContainer: {
+    padding: 10,
+    backgroundColor: '#f0f0f0',
+    borderRadius: 30,
+    position: 'absolute',
+    height: 105,
+    marginTop: 30,
+    marginLeft: 5,
+    
+  },
+  cloudContent: {
+    width: 300,
+    height: 120,
+  },
+  pointer: {
+    position: 'absolute',
+    bottom: -8,
+    left: '50%',
+    marginLeft: -12,
+    width: 0,
+    height: 0,
+    borderLeftWidth: 12,
+    borderRightWidth: 12,
+    borderBottomWidth: 12,
+    borderLeftColor: 'transparent',
+    borderRightColor: 'transparent',
+    borderBottomColor: 'black',
+  },
+  infoBulletContainer: {
+    overflow: 'hidden',
+    width: 300,
+    height: 150,
+    padding: 10,
+    backgroundColor: '#f0f0f0',
+    borderRadius: 8,
+    position: 'absolute',
+    marginBottom: 4,
+  },
+  infoBullet: {
+    fontSize: 16,
+    marginBottom: 3,
+    color: '#000',
+  },
 });
 
 export default MedicalCard;
+

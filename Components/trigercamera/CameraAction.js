@@ -48,7 +48,7 @@ const CameraAction = ({ userData: propUserData }) => {
                 });
                 data.append('email', email);
 
-                fetch('http://192.168.18.211:5000/upload', {
+                fetch('http://192.168.18.175:5000/upload', {
                     method: 'POST',
                     body: data,
                 })

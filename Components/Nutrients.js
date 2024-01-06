@@ -6,7 +6,12 @@ const NutrientGraph = ({ nutrientName, value, color, totalValue }) => {
   const barHeight = 11;
   const barWidth = 356;
 
-  const filledWidth = value && totalValue ? (value / totalValue) * barWidth : 0;
+  let filledWidth = value && totalValue ? (value / totalValue) * barWidth : 0;
+
+  // Check if filledWidth exceeds the total value
+  if (filledWidth > barWidth) {
+    filledWidth = barWidth;
+  }
 
   const animatedWidth = useState(new Animated.Value(0))[0];
 
@@ -20,13 +25,20 @@ const NutrientGraph = ({ nutrientName, value, color, totalValue }) => {
 
   const displayValue = value !== undefined ? value.toFixed(2) : 0;
   const displayTotalValue = totalValue !== undefined ? totalValue.toFixed(2) : 0;
+  const exceededTotalValue = value > totalValue;
+
+  // Display only the first word of the nutrient name
+  const firstWordOfNutrientName = nutrientName.split('_')[0];
 
   return (
     <View style={styles.nutrientGraph}>
       <View style={styles.nutrientNameContainer}>
-        <Text style={[styles.nutrientName, { color: 'white' }]}>{nutrientName}</Text>
-        <Text style={[styles.nutrientValueText, { color: 'white' }]}>
+        <Text style={[styles.nutrientName, { color: 'black' }]}>{firstWordOfNutrientName}</Text>
+        <Text style={[styles.nutrientValueText, { color: 'black' }]}>
           {displayValue}g/{displayTotalValue}g
+          {exceededTotalValue && (
+            <Text style={{ color: 'red', marginLeft: 5, fontWeight: 'bold', fontSize: 22 }}> !</Text>
+          )}
         </Text>
       </View>
       <View style={[styles.nutrientBarContainer, { height: barHeight }]}>
@@ -54,17 +66,13 @@ const NutrientsComponent = ({ userData }) => {
   const [apiData, setApiData] = useState(null);
 
   useEffect(() => {
-    // Extract email from local storage or wherever you have it stored in your userData
     const fetchData = async () => {
       try {
-        // Extract email from local storage or wherever you have it stored in your userData
         const email = await AsyncStorage.getItem('email');
 
-        // Make a request to the API
-        fetch(`http://192.168.18.211:5000/get_user_data?email=${email}`)
+        fetch(`http://192.168.18.175:5000/get_user_data?email=${email}`)
           .then((response) => response.json())
           .then((data) => {
-            // Handle the API response here
             setApiData(data.user_data);
           })
           .catch((error) => console.error('Error fetching data from API:', error));
@@ -77,17 +85,13 @@ const NutrientsComponent = ({ userData }) => {
   }, []);
 
   if (!apiData) {
-    // API data is not yet available
     return <Text>Loading...</Text>;
   }
 
-  // Destructure the necessary information from the API response
   const { nutrients_intake, bmr_info } = apiData;
 
-  // Check if nutrients_intake array is not empty and extract the first element
   const nutrientsIntake = nutrients_intake.length > 0 ? nutrients_intake[0][0] : {};
 
-  // Map the keys from nutrientsIntake to match the keys in totalNutrients
   const mappedNutrientsIntake = {
     calories: nutrientsIntake.calories,
     carbohydrates_total_g: nutrientsIntake.carbohydrates_total_g,
@@ -98,15 +102,14 @@ const NutrientsComponent = ({ userData }) => {
     sugar_g: nutrientsIntake.sugar_g,
   };
 
-  // Map the keys from bmr_info and set constant values for sugar, fiber, sodium
   const mappedTotalNutrients = {
     calories: bmr_info.bmr,
     carbohydrates_total_g: bmr_info.carbohydrate_g,
     fat_total_g: bmr_info.fat_g,
     protein_g: bmr_info.protein_g,
-    sugar_g: 100, // Set a constant value for sugar
-    fiber_g: 100, // Set a constant value for fiber
-    sodium_mg: 100, // Set a constant value for sodium
+    sugar_g: 100,
+    fiber_g: 100,
+    sodium_mg: 100,
   };
 
   const nutrientOrder = [
@@ -133,7 +136,7 @@ const NutrientsComponent = ({ userData }) => {
       style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}
     >
       <View style={styles.container}>
-        <Text style={[styles.cardTitle, { color: 'white' }]}>NUTRIENTS</Text>
+        <Text style={[styles.cardTitle, { color: 'black', }]}>NUTRIENTS</Text>
         <View style={styles.cardContent}>
           {mappedNutrients.map(({ nutrientName, value, color, totalValue, key }) => (
             <NutrientGraph
@@ -152,7 +155,7 @@ const NutrientsComponent = ({ userData }) => {
 
 const getNutrientColor = (nutrientName) => {
   const colorMap = {
-    calories: '#ffffff', // Adjust the color for calories
+    calories: '#ffffff',
     carbohydrates_total_g: '#ff7fcc',
     fat_total_g: 'yellow',
     fiber_g: '#ffc21a',
@@ -191,6 +194,7 @@ const styles = StyleSheet.create({
   nutrientName: {
     fontSize: 18,
     fontWeight: 'bold',
+    textTransform: 'capitalize', // Capitalize the first letter
   },
   nutrientValueText: {
     fontSize: 14,

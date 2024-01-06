@@ -23,7 +23,7 @@ const calculateColor = (nutrient, value) => {
     case 'protein':
       return value > 50 ? '#ff7fcc' : '#f48fb1'; // Pink if high, light pink if low
     case 'carbs':
-      return value > 50 ? '#1affe8' : '#4fc3f7'; // Cyan if high, light cyan if low
+      return value > 50 ? '#0077cc' : '#4fc3f7'; // Dark blue if high, light blue if low
     case 'fats':
       return value > 50 ? '#ffc21a' : '#ffd54f'; // Yellow if high, light yellow if low
     default:
@@ -53,7 +53,7 @@ const MacrosComponent = ({ userData }) => {
 
         if (userData && email) {
           const response = await fetch(
-            `http://192.168.18.211:5000/get_user_data?email=${email}`
+            `http://192.168.18.175:5000/get_user_data?email=${email}`
           );
           const data = await response.json();
 
@@ -127,7 +127,7 @@ const MacrosComponent = ({ userData }) => {
               r={radius - 16}
               stroke={animatedStroke}
               strokeWidth="2"
-              fill="brown"
+              fill="white"
               strokeDasharray={[
                 macros.protein,
                 macros.carbs, // Adjusted to prevent color mixing
@@ -185,7 +185,7 @@ const MacrosComponent = ({ userData }) => {
               x2={radius + (radius - 16) * Math.cos((macros.protein / bmrCircumference) * 2 * Math.PI)}
               y2={radius + (radius - 16) * Math.sin((macros.protein / bmrCircumference) * 2 * Math.PI)}
               stroke="pink"
-              strokeWidth="8"
+              strokeWidth="2"
             />
 
             <Line
@@ -209,8 +209,8 @@ const MacrosComponent = ({ userData }) => {
                       Math.PI
                   )
               }
-              stroke="#1affe8"
-              strokeWidth="6"
+              stroke="#0077cc"
+              strokeWidth="3"
             />
 
             <Line
@@ -237,7 +237,7 @@ const MacrosComponent = ({ userData }) => {
                   )
               }
               stroke="#ffc21a"
-              strokeWidth="4"
+              strokeWidth="3"
             />
 
             <SvgText
@@ -247,7 +247,7 @@ const MacrosComponent = ({ userData }) => {
               dominantBaseline="middle"
               fontSize="22"
               fontWeight="bold"
-              fill="white"
+              fill="url(#gradientAnimated)"
             >
               {macros.carbs + macros.protein + macros.fats} cal
             </SvgText>
@@ -262,18 +262,18 @@ const MacrosComponent = ({ userData }) => {
                 ]}
               />
               <Text style={[styles.macroText, { color: '#ff7fcc' }]}>
-                Protein: {macros.protein}g
+                Protein: {macros.protein} cal
               </Text>
             </View>
             <View style={styles.macroValue}>
               <View
                 style={[
                   styles.macroIndicator,
-                  { backgroundColor: '#1affe8', marginBottom: 5, marginRight: 10 },
+                  { backgroundColor: '#0077cc', marginBottom: 5, marginRight: 10 },
                 ]}
               />
-              <Text style={[styles.macroText, { color: '#1affe8' }]}>
-                Carbs: {macros.carbs}g
+              <Text style={[styles.macroText, { color: '#0077cc' }]}>
+                Carbs: {macros.carbs} cal
               </Text>
             </View>
             <View style={styles.macroValue}>
@@ -284,7 +284,7 @@ const MacrosComponent = ({ userData }) => {
                 ]}
               />
               <Text style={[styles.macroText, { color: '#ffc21a' }]}>
-                Fats: {macros.fats}g
+                Fats: {macros.fats} cal
               </Text>
             </View>
           </View>

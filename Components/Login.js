@@ -38,7 +38,7 @@ const Login = ({ navigation }) => {
       }
 
      
-      const response = await fetch(`http://192.168.18.211:5000/get_user_data?email=${email}`);
+      const response = await fetch(`http://192.168.18.175:5000/get_user_data?email=${email}`);
       const data = await response.json();
 
       const user_data = data.user_data;
