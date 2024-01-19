@@ -1,20 +1,30 @@
-import appleGIF from '../../assets/game_ready_fruit__vegetable_asset_pack/doctor.gif';
-import React, { useEffect, useState } from 'react';
-import { View, StyleSheet, ScrollView, Animated, TouchableOpacity, Text, Image, ImageBackground } from 'react-native';
-import AsyncStorage from '@react-native-async-storage/async-storage';
-import { useNavigation } from '@react-navigation/native';
-import Food_Banner from '../../assets/game_ready_fruit__vegetable_asset_pack/Food_Banner.gif';
-import phy from '../../assets/game_ready_fruit__vegetable_asset_pack/phy.png';
-import Food from '../../assets/game_ready_fruit__vegetable_asset_pack/Food.png';
+import React, { useEffect, useState, useCallback } from "react";
+import {
+  View,
+  StyleSheet,
+  ScrollView,
+  Animated,
+  TouchableOpacity,
+  Text,
+  Image,
+  ImageBackground,
+  Alert,
+  BackHandler,
+} from "react-native";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { useNavigation, useFocusEffect } from "@react-navigation/native";
+import Food from "../../assets/game_ready_fruit__vegetable_asset_pack/Food.png";
+import appleGIF from "../../assets/game_ready_fruit__vegetable_asset_pack/doctor.gif";
+import phy from "../../assets/game_ready_fruit__vegetable_asset_pack/phy.png";
 
-const colorsArray = ['#000'];
+const colorsArray = ["#000"];
 
 const MedicalCard = () => {
   const [showAnimation, setShowAnimation] = useState(false);
-  const [currentSection, setCurrentSection] = useState('');
+  const [currentSection, setCurrentSection] = useState("");
   const [infoBulletColor, setInfoBulletColor] = useState(colorsArray[0]);
   const navigation = useNavigation();
-  const backgroundImage = require('../../assets/game_ready_fruit__vegetable_asset_pack/wallpaper.jpg');
+  const backgroundImage = require("../../assets/game_ready_fruit__vegetable_asset_pack/wallpaper.jpg");
 
   const [cloudVisible, setCloudVisible] = useState(true);
   const [blinkAnimation] = useState(new Animated.Value(0));
@@ -24,7 +34,29 @@ const MedicalCard = () => {
       setShowAnimation(true);
       animateText();
     }, 2500);
+
+    const backHandler = BackHandler.addEventListener(
+      "hardwareBackPress",
+      handleBackPress
+    );
+
+    return () => {
+      backHandler.remove();
+    };
   }, []);
+
+  useFocusEffect(
+    useCallback(() => {
+      const backHandler = BackHandler.addEventListener(
+        "hardwareBackPress",
+        handleBackPress
+      );
+
+      return () => {
+        backHandler.remove();
+      };
+    }, [])
+  );
 
   const animateText = () => {
     const sectionsArray = [
@@ -74,20 +106,67 @@ const MedicalCard = () => {
     animateNextSection();
   };
 
+  const handleBackPress = () => {
+    Alert.alert(
+      "Exit App",
+      "Are you sure you want to exit?",
+      [
+        {
+          text: "Cancel",
+          style: "cancel",
+        },
+        {
+          text: "Exit",
+          onPress: () => BackHandler.exitApp(),
+        },
+      ],
+      { cancelable: false }
+    );
+
+    return true;
+  };
+
+  const handleLogout = async () => {
+    Alert.alert(
+      "Logout",
+      "Are you sure you want to logout?",
+      [
+        {
+          text: "Cancel",
+          style: "cancel",
+        },
+        {
+          text: "Logout",
+          onPress: async () => {
+            await AsyncStorage.clear();
+            navigation.navigate("Login");
+          },
+        },
+      ],
+      { cancelable: false }
+    );
+  };
+
   return (
     <ImageBackground
       source={backgroundImage}
-      style={{ flex: 1, justifyContent: 'center', alignItems: 'center', padding: 0, margin: 0 }}
+      style={{
+        flex: 1,
+        justifyContent: "center",
+        alignItems: "center",
+        padding: 0,
+        margin: 0,
+      }}
     >
-      <ScrollView contentContainerStyle={{padding: 0, margin: 0 }}>
-        <View style={{ alignSelf: 'center' }}>
+      <ScrollView contentContainerStyle={{ padding: 0, margin: 0 }}>
+        <View style={{ alignSelf: "center" }}>
           <Image
             source={Food}
             style={{
               width: 350,
               height: 300,
-              resizeMode: 'contain',
-              alignSelf: 'center',
+              resizeMode: "contain",
+              alignSelf: "center",
             }}
           />
         </View>
@@ -99,7 +178,7 @@ const MedicalCard = () => {
           <View style={styles.cardTextContainer}>
             <Text style={styles.cardHeading}>TRACK YOUR HEALTH</Text>
             <TouchableOpacity
-              onPress={() => navigation.navigate('CameraAction')}
+              onPress={() => navigation.navigate("CameraAction")}
               style={styles.cardButton}
             >
               <Text style={styles.cardButtonText}>Calculate Nutrients</Text>
@@ -114,25 +193,24 @@ const MedicalCard = () => {
                 styles.cloudContainer,
                 {
                   opacity: blinkAnimation,
-                  display: cloudVisible ? 'flex' : 'none',
+                  display: cloudVisible ? "flex" : "none",
                 },
               ]}
             >
               <View style={styles.pointer}></View>
               <View style={styles.cloudContent}>
-              <Text style={styles.cloudContent}>
-  <Text style={{ fontWeight: 'bold', marginBottom: 10 }}>Tips:{'\n'}</Text>
-  {currentSection}
-</Text>
-
-
-                
+                <Text style={styles.cloudContent}>
+                  <Text style={{ fontWeight: "bold", marginBottom: 10 }}>
+                    Tips:{"\n"}
+                  </Text>
+                  {currentSection}
+                </Text>
               </View>
             </Animated.View>
           )}
         </View>
 
-        <View style={{ alignSelf: 'flex-end', marginRight: -10 }}>
+        <View style={{ alignSelf: "flex-end", marginRight: -10 }}>
           <Animated.Image
             source={appleGIF}
             style={{
@@ -149,6 +227,11 @@ const MedicalCard = () => {
             }}
           />
         </View>
+
+        {/* Logout Button */}
+        <TouchableOpacity onPress={handleLogout} style={styles.logoutButton}>
+          <Text style={styles.logoutButtonText}>Logout</Text>
+        </TouchableOpacity>
       </ScrollView>
     </ImageBackground>
   );
@@ -156,15 +239,15 @@ const MedicalCard = () => {
 
 const styles = StyleSheet.create({
   cardContainer: {
-    flexDirection: 'row',
-    marginBottom: 12,
+    flexDirection: "row",
+    marginBottom: 5,
     borderRadius: 10,
     marginLeft: 8,
     marginRight: 8,
-    overflow: 'hidden',
-    backgroundColor: '#ffffff',
+    overflow: "hidden",
+    backgroundColor: "#ffffff",
     borderWidth: 0,
-    shadowColor: '#000',
+    shadowColor: "#000",
     width: 350,
     shadowOffset: {
       width: 0,
@@ -178,7 +261,7 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   cardImage: {
-    width: '110%',
+    width: "110%",
     height: 150,
   },
   cardTextContainer: {
@@ -187,65 +270,79 @@ const styles = StyleSheet.create({
   },
   cardHeading: {
     fontSize: 13,
-    fontWeight: 'bold',
+    fontWeight: "bold",
     marginBottom: 40,
-    color: 'black',
+    color: "black",
   },
   cardButton: {
-    backgroundColor: '#3498db',
+    backgroundColor: "#3498db",
     paddingVertical: 10,
     borderRadius: 10,
-    alignItems: 'center',
+    alignItems: "center",
   },
   cardButtonText: {
-    color: '#fff',
+    color: "#fff",
     fontSize: 13,
-    fontWeight: 'bold',
+    fontWeight: "bold",
   },
   cloudContainer: {
     padding: 10,
-    backgroundColor: '#f0f0f0',
+    backgroundColor: "#f0f0f0",
     borderRadius: 30,
-    position: 'absolute',
+    position: "absolute",
     height: 105,
     marginTop: 30,
     marginLeft: 5,
-    
   },
   cloudContent: {
     width: 300,
     height: 120,
   },
   pointer: {
-    position: 'absolute',
+    position: "absolute",
     bottom: -8,
-    left: '50%',
+    left: "50%",
     marginLeft: -12,
     width: 0,
     height: 0,
     borderLeftWidth: 12,
     borderRightWidth: 12,
     borderBottomWidth: 12,
-    borderLeftColor: 'transparent',
-    borderRightColor: 'transparent',
-    borderBottomColor: 'black',
+    borderLeftColor: "transparent",
+    borderRightColor: "transparent",
+    borderBottomColor: "black",
   },
   infoBulletContainer: {
-    overflow: 'hidden',
+    overflow: "hidden",
     width: 300,
     height: 150,
     padding: 10,
-    backgroundColor: '#f0f0f0',
+    backgroundColor: "#f0f0f0",
     borderRadius: 8,
-    position: 'absolute',
+    position: "absolute",
     marginBottom: 4,
   },
   infoBullet: {
     fontSize: 16,
     marginBottom: 3,
-    color: '#000',
+    color: "#000",
+  },
+  logoutButton: {
+    position: "absolute",
+    top: 10,
+    right: 18,
+    backgroundColor: "#3498db",
+    borderRadius: 6,
+    alignItems: "center",
+    paddingVertical: 7,
+  },
+  logoutButtonText: {
+    color: "#fff",
+    fontSize: 12,
+    fontWeight: "bold",
+    paddingLeft: 5,
+    paddingRight: 5,
   },
 });
 
 export default MedicalCard;
-

@@ -1,29 +1,43 @@
-
-import React, { useState } from 'react';
-import { View, Text, TextInput, TouchableOpacity, StyleSheet, Alert } from 'react-native';
-import DropDownPicker from 'react-native-dropdown-picker';
+import React, { useState } from "react";
+import {
+  View,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  StyleSheet,
+  Alert,
+} from "react-native";
+import DropDownPicker from "react-native-dropdown-picker";
 
 const RegisterPage = ({ navigation }) => {
-  const [name, setName] = useState('');
-  const [email, setEmail] = useState('');
-  const [heightCm, setHeightCm] = useState('');
-  const [weightKg, setWeightKg] = useState('');
-  const [age, setAge] = useState('');
-  const [gender, setGender] = useState('');
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
+  const [heightCm, setHeightCm] = useState("");
+  const [weightKg, setWeightKg] = useState("");
+  const [age, setAge] = useState("");
+  const [gender, setGender] = useState("");
   const [activityLevel, setActivityLevel] = useState(null);
   const [open, setOpen] = useState(false);
 
   const activityLevels = [
-    { label: 'Sedentary', value: 'sedentary' },
-    { label: 'Light Activity', value: 'light activity' },
-    { label: 'Moderate Activity', value: 'moderate activity' },
-    { label: 'Very Active', value: 'very active' },
+    { label: "Sedentary", value: "sedentary" },
+    { label: "Light Activity", value: "light activity" },
+    { label: "Moderate Activity", value: "moderate activity" },
+    { label: "Very Active", value: "very active" },
   ];
 
   const handleRegister = async () => {
     try {
-      if (!name || !email || !heightCm || !weightKg || !age || !gender || !activityLevel) {
-        Alert.alert('Error', 'Please fill in all fields');
+      if (
+        !name ||
+        !email ||
+        !heightCm ||
+        !weightKg ||
+        !age ||
+        !gender ||
+        !activityLevel
+      ) {
+        Alert.alert("Error", "Please fill in all fields");
         return;
       }
 
@@ -37,25 +51,25 @@ const RegisterPage = ({ navigation }) => {
         activity_level: activityLevel.trim(),
       };
 
-      const response = await fetch('http://192.168.18.175:5000/calculate_bmr', {
-        method: 'POST',
+      const response = await fetch("http://184.72.73.229:5001/calculate_bmr", {
+        method: "POST",
         headers: {
-          'Content-Type': 'application/json',
+          "Content-Type": "application/json",
         },
         body: JSON.stringify(data),
       });
 
       if (response.ok) {
         const result = await response.json();
-        console.log('API Response:', JSON.stringify(result));
+        console.log("API Response:", JSON.stringify(result));
 
-        navigation.navigate('Login');
+        navigation.navigate("Login");
       } else {
-        Alert.alert('Error', 'Registration failed. Please try again.');
+        Alert.alert("Error", "Registration failed. Please try again.");
       }
     } catch (error) {
-      console.error('Error during registration:', error);
-      Alert.alert('Error', 'An unexpected error occurred. Please try again.');
+      console.error("Error during registration:", error);
+      Alert.alert("Error", "An unexpected error occurred. Please try again.");
     }
   };
 
@@ -124,19 +138,19 @@ const RegisterPage = ({ navigation }) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#eaf7fe',
-    justifyContent: 'center',
-    alignItems: 'center',
+    backgroundColor: "#eaf7fe",
+    justifyContent: "center",
+    alignItems: "center",
   },
   heading: {
     fontSize: 24,
-    fontWeight: 'bold',
+    fontWeight: "bold",
     marginBottom: 20,
   },
   input: {
-    width: '80%',
+    width: "80%",
     height: 45,
-    borderColor: 'gray',
+    borderColor: "gray",
     borderWidth: 1,
     borderRadius: 5,
     marginBottom: 15,
@@ -144,24 +158,24 @@ const styles = StyleSheet.create({
   },
   dropdown: {
     marginTop: 2,
-    width: '80%',
-    borderColor: '#3498db',
+    width: "80%",
+    borderColor: "#3498db",
     borderWidth: 1,
     borderRadius: 5,
-    position: 'relative',
-    backgroundColor: '#dcecfa',
+    position: "relative",
+    backgroundColor: "#dcecfa",
     zIndex: 1,
   },
   button: {
     marginTop: 20,
     padding: 10,
-    backgroundColor: '#3498db',
+    backgroundColor: "#3498db",
     borderRadius: 5,
   },
   buttonText: {
-    color: '#fff',
+    color: "#fff",
     fontSize: 16,
-    fontWeight: 'bold',
+    fontWeight: "bold",
   },
 });
 

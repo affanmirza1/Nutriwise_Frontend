@@ -1,4 +1,3 @@
-// Macros Page
 import React, { useState, useEffect } from "react";
 import {
   View,
@@ -11,7 +10,6 @@ import {
 import {
   Svg,
   Circle,
-  Line,
   Text as SvgText,
   Defs,
   LinearGradient,
@@ -22,13 +20,13 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 const calculateColor = (nutrient, value) => {
   switch (nutrient) {
     case "protein":
-      return value > 50 ? "#ff7fcc" : "#f48fb1"; // Pink if high, light pink if low
+      return value > 50 ? "#ff7fcc" : "#f48fb1";
     case "carbs":
-      return value > 50 ? "#0077cc" : "#4fc3f7"; // Dark blue if high, light blue if low
+      return value > 50 ? "#0077cc" : "#4fc3f7";
     case "fats":
-      return value > 50 ? "#ffc21a" : "#ffd54f"; // Yellow if high, light yellow if low
+      return value > 50 ? "#ffc21a" : "#ffd54f";
     default:
-      return "#ffffff"; // Default to white if unknown nutrient
+      return "#ffffff";
   }
 };
 
@@ -54,7 +52,7 @@ const MacrosComponent = ({ userData }) => {
 
         if (userData && email) {
           const response = await fetch(
-            `http://192.168.18.175:5000/get_user_data?email=${email}`
+            `http://184.72.73.229:5001/get_user_data?email=${email}`
           );
           const data = await response.json();
 
@@ -93,6 +91,14 @@ const MacrosComponent = ({ userData }) => {
     fetchData();
   }, [animatedValue, userData]);
 
+  const isValidPercentage = (value) => {
+    const percentage =
+      (value / (macros.protein + macros.carbs + macros.fats)) * 100;
+    return Number.isFinite(percentage)
+      ? Math.max(0, Math.min(percentage, 100))
+      : 0;
+  };
+
   const animatedStroke = animatedValue.interpolate({
     inputRange: [0, 1],
     outputRange: ["#ff7fcc", "#1affe8"],
@@ -126,14 +132,21 @@ const MacrosComponent = ({ userData }) => {
               cx={radius}
               cy={radius}
               r={radius - 16}
-              stroke={animatedStroke}
+              stroke={`url(#gradientAnimated)`}
               strokeWidth="2"
               fill="white"
               strokeDasharray={[
-                macros.protein,
-                macros.carbs, // Adjusted to prevent color mixing
-                macros.fats, // Adjusted to prevent color mixing
-                bmrCircumference - macros.protein - macros.carbs - macros.fats,
+                isNaN(macros.protein) ? 0 : macros.protein,
+                isNaN(macros.carbs) ? 0 : macros.carbs,
+                isNaN(macros.fats) ? 0 : macros.fats,
+                isNaN(
+                  bmrCircumference - macros.protein - macros.carbs - macros.fats
+                )
+                  ? 0
+                  : bmrCircumference -
+                    macros.protein -
+                    macros.carbs -
+                    macros.fats,
               ]}
               strokeLinecap="round"
             />
@@ -151,18 +164,12 @@ const MacrosComponent = ({ userData }) => {
                   stopColor={calculateColor("protein", macros.protein)}
                 />
                 <Stop
-                  offset={`${
-                    (macros.protein /
-                      (macros.protein + macros.carbs + macros.fats)) *
-                    100
-                  }%`}
+                  offset={`${isValidPercentage(macros.protein) || 0}%`}
                   stopColor={calculateColor("carbs", macros.carbs)}
                 />
                 <Stop
                   offset={`${
-                    ((macros.protein + macros.carbs) /
-                      (macros.protein + macros.carbs + macros.fats)) *
-                    100
+                    isValidPercentage(macros.protein + macros.carbs) || 0
                   }%`}
                   stopColor={calculateColor("fats", macros.fats)}
                 />
@@ -180,75 +187,6 @@ const MacrosComponent = ({ userData }) => {
               </LinearGradient>
             </Defs>
 
-            <Line
-              x1={radius}
-              y1={radius}
-              x2={
-                radius +
-                (radius - 16) *
-                  Math.cos((macros.protein / bmrCircumference) * 2 * Math.PI)
-              }
-              y2={
-                radius +
-                (radius - 16) *
-                  Math.sin((macros.protein / bmrCircumference) * 2 * Math.PI)
-              }
-              stroke="pink"
-              strokeWidth="2"
-            />
-
-            <Line
-              x1={radius}
-              y1={radius}
-              x2={
-                radius +
-                (radius - 16) *
-                  Math.cos(
-                    ((macros.protein + macros.carbs) / bmrCircumference) *
-                      2 *
-                      Math.PI
-                  )
-              }
-              y2={
-                radius +
-                (radius - 16) *
-                  Math.sin(
-                    ((macros.protein + macros.carbs) / bmrCircumference) *
-                      2 *
-                      Math.PI
-                  )
-              }
-              stroke="#0077cc"
-              strokeWidth="3"
-            />
-
-            <Line
-              x1={radius}
-              y1={radius}
-              x2={
-                radius +
-                (radius - 16) *
-                  Math.cos(
-                    ((macros.protein + macros.carbs + macros.fats) /
-                      bmrCircumference) *
-                      2 *
-                      Math.PI
-                  )
-              }
-              y2={
-                radius +
-                (radius - 16) *
-                  Math.sin(
-                    ((macros.protein + macros.carbs + macros.fats) /
-                      bmrCircumference) *
-                      2 *
-                      Math.PI
-                  )
-              }
-              stroke="#ffc21a"
-              strokeWidth="3"
-            />
-
             <SvgText
               x={radius - 10}
               y={radius + 10}
@@ -256,7 +194,7 @@ const MacrosComponent = ({ userData }) => {
               dominantBaseline="middle"
               fontSize="22"
               fontWeight="bold"
-              fill="url(#gradientAnimated)"
+              fill={`url(#gradientAnimated)`}
             >
               {macros.carbs + macros.protein + macros.fats} cal
             </SvgText>
@@ -275,7 +213,7 @@ const MacrosComponent = ({ userData }) => {
                 ]}
               />
               <Text style={[styles.macroText, { color: "#ff7fcc" }]}>
-                Protein: {macros.protein} cal
+                Protein: {isNaN(macros.protein) ? 0 : macros.protein} cal
               </Text>
             </View>
             <View style={styles.macroValue}>
@@ -290,7 +228,7 @@ const MacrosComponent = ({ userData }) => {
                 ]}
               />
               <Text style={[styles.macroText, { color: "#0077cc" }]}>
-                Carbs: {macros.carbs} cal
+                Carbs: {isNaN(macros.carbs) ? 0 : macros.carbs} cal
               </Text>
             </View>
             <View style={styles.macroValue}>
@@ -305,7 +243,7 @@ const MacrosComponent = ({ userData }) => {
                 ]}
               />
               <Text style={[styles.macroText, { color: "#ffc21a" }]}>
-                Fats: {macros.fats} cal
+                Fats: {isNaN(macros.fats) ? 0 : macros.fats} cal
               </Text>
             </View>
           </View>
