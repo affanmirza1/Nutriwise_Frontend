@@ -1,4 +1,5 @@
-import React, { useState, useEffect } from 'react';
+// Macros Page
+import React, { useState, useEffect } from "react";
 import {
   View,
   Text,
@@ -6,7 +7,7 @@ import {
   Animated,
   Easing,
   ImageBackground,
-} from 'react-native';
+} from "react-native";
 import {
   Svg,
   Circle,
@@ -15,24 +16,24 @@ import {
   Defs,
   LinearGradient,
   Stop,
-} from 'react-native-svg';
-import AsyncStorage from '@react-native-async-storage/async-storage';
+} from "react-native-svg";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const calculateColor = (nutrient, value) => {
   switch (nutrient) {
-    case 'protein':
-      return value > 50 ? '#ff7fcc' : '#f48fb1'; // Pink if high, light pink if low
-    case 'carbs':
-      return value > 50 ? '#0077cc' : '#4fc3f7'; // Dark blue if high, light blue if low
-    case 'fats':
-      return value > 50 ? '#ffc21a' : '#ffd54f'; // Yellow if high, light yellow if low
+    case "protein":
+      return value > 50 ? "#ff7fcc" : "#f48fb1"; // Pink if high, light pink if low
+    case "carbs":
+      return value > 50 ? "#0077cc" : "#4fc3f7"; // Dark blue if high, light blue if low
+    case "fats":
+      return value > 50 ? "#ffc21a" : "#ffd54f"; // Yellow if high, light yellow if low
     default:
-      return '#ffffff'; // Default to white if unknown nutrient
+      return "#ffffff"; // Default to white if unknown nutrient
   }
 };
 
 const MacrosComponent = ({ userData }) => {
-  const backgroundImage = require('../assets/game_ready_fruit__vegetable_asset_pack/wallpaper.jpg');
+  const backgroundImage = require("../assets/game_ready_fruit__vegetable_asset_pack/wallpaper.jpg");
   const radius = 80;
   const animationDuration = 1000;
 
@@ -49,7 +50,7 @@ const MacrosComponent = ({ userData }) => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const email = await AsyncStorage.getItem('email');
+        const email = await AsyncStorage.getItem("email");
 
         if (userData && email) {
           const response = await fetch(
@@ -85,7 +86,7 @@ const MacrosComponent = ({ userData }) => {
           }).start();
         }
       } catch (error) {
-        console.error('Error fetching data:', error);
+        console.error("Error fetching data:", error);
       }
     };
 
@@ -94,13 +95,13 @@ const MacrosComponent = ({ userData }) => {
 
   const animatedStroke = animatedValue.interpolate({
     inputRange: [0, 1],
-    outputRange: ['#ff7fcc', '#1affe8'],
+    outputRange: ["#ff7fcc", "#1affe8"],
   });
 
   return (
     <ImageBackground
       source={backgroundImage}
-      style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}
+      style={{ flex: 1, justifyContent: "center", alignItems: "center" }}
     >
       <View style={styles.cardContainer}>
         <View style={styles.iconContainer}>
@@ -147,7 +148,7 @@ const MacrosComponent = ({ userData }) => {
               >
                 <Stop
                   offset="100%"
-                  stopColor={calculateColor('protein', macros.protein)}
+                  stopColor={calculateColor("protein", macros.protein)}
                 />
                 <Stop
                   offset={`${
@@ -155,7 +156,7 @@ const MacrosComponent = ({ userData }) => {
                       (macros.protein + macros.carbs + macros.fats)) *
                     100
                   }%`}
-                  stopColor={calculateColor('carbs', macros.carbs)}
+                  stopColor={calculateColor("carbs", macros.carbs)}
                 />
                 <Stop
                   offset={`${
@@ -163,7 +164,7 @@ const MacrosComponent = ({ userData }) => {
                       (macros.protein + macros.carbs + macros.fats)) *
                     100
                   }%`}
-                  stopColor={calculateColor('fats', macros.fats)}
+                  stopColor={calculateColor("fats", macros.fats)}
                 />
               </LinearGradient>
 
@@ -182,8 +183,16 @@ const MacrosComponent = ({ userData }) => {
             <Line
               x1={radius}
               y1={radius}
-              x2={radius + (radius - 16) * Math.cos((macros.protein / bmrCircumference) * 2 * Math.PI)}
-              y2={radius + (radius - 16) * Math.sin((macros.protein / bmrCircumference) * 2 * Math.PI)}
+              x2={
+                radius +
+                (radius - 16) *
+                  Math.cos((macros.protein / bmrCircumference) * 2 * Math.PI)
+              }
+              y2={
+                radius +
+                (radius - 16) *
+                  Math.sin((macros.protein / bmrCircumference) * 2 * Math.PI)
+              }
               stroke="pink"
               strokeWidth="2"
             />
@@ -258,10 +267,14 @@ const MacrosComponent = ({ userData }) => {
               <View
                 style={[
                   styles.macroIndicator,
-                  { backgroundColor: '#ff7fcc', marginBottom: 5, marginRight: 10 },
+                  {
+                    backgroundColor: "#ff7fcc",
+                    marginBottom: 5,
+                    marginRight: 10,
+                  },
                 ]}
               />
-              <Text style={[styles.macroText, { color: '#ff7fcc' }]}>
+              <Text style={[styles.macroText, { color: "#ff7fcc" }]}>
                 Protein: {macros.protein} cal
               </Text>
             </View>
@@ -269,10 +282,14 @@ const MacrosComponent = ({ userData }) => {
               <View
                 style={[
                   styles.macroIndicator,
-                  { backgroundColor: '#0077cc', marginBottom: 5, marginRight: 10 },
+                  {
+                    backgroundColor: "#0077cc",
+                    marginBottom: 5,
+                    marginRight: 10,
+                  },
                 ]}
               />
-              <Text style={[styles.macroText, { color: '#0077cc' }]}>
+              <Text style={[styles.macroText, { color: "#0077cc" }]}>
                 Carbs: {macros.carbs} cal
               </Text>
             </View>
@@ -280,10 +297,14 @@ const MacrosComponent = ({ userData }) => {
               <View
                 style={[
                   styles.macroIndicator,
-                  { backgroundColor: '#ffc21a', marginBottom: 5, marginRight: 10 },
+                  {
+                    backgroundColor: "#ffc21a",
+                    marginBottom: 5,
+                    marginRight: 10,
+                  },
                 ]}
               />
-              <Text style={[styles.macroText, { color: '#ffc21a' }]}>
+              <Text style={[styles.macroText, { color: "#ffc21a" }]}>
                 Fats: {macros.fats} cal
               </Text>
             </View>
@@ -296,10 +317,10 @@ const MacrosComponent = ({ userData }) => {
 
 const styles = StyleSheet.create({
   cardContainer: {
-    width: '90%',
-    backgroundColor: 'white',
+    width: "90%",
+    backgroundColor: "white",
     borderRadius: 10,
-    shadowColor: '#000',
+    shadowColor: "#000",
     shadowOffset: {
       width: 0,
       height: 2,
@@ -310,15 +331,15 @@ const styles = StyleSheet.create({
   },
   iconContainer: {
     padding: 20,
-    alignItems: 'center',
+    alignItems: "center",
   },
   macroValues: {
     marginTop: 20,
-    flexDirection: 'row',
-    justifyContent: 'space-around',
+    flexDirection: "row",
+    justifyContent: "space-around",
   },
   macroValue: {
-    alignItems: 'center',
+    alignItems: "center",
   },
   macroIndicator: {
     width: 12,
@@ -327,7 +348,7 @@ const styles = StyleSheet.create({
     marginBottom: 5,
   },
   macroText: {
-    color: '#555',
+    color: "#555",
     marginRight: 16,
   },
 });
