@@ -36,7 +36,6 @@
     "react-native-screens": "^3.29.0",
     "react-native-svg": "13.9.0",
     "react-native-svg-charts": "^5.4.0",
-    "react-native-vision-camera": "^2.15.6",
     "react-native-web": "^0.19.9"
   },
   "devDependencies": {
