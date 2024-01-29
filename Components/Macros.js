@@ -188,15 +188,16 @@ const MacrosComponent = ({ userData }) => {
             </Defs>
 
             <SvgText
-              x={radius - 10}
+              x={radius - 10+10}
               y={radius + 10}
               textAnchor="middle"
               dominantBaseline="middle"
               fontSize="22"
               fontWeight="bold"
+              marginLeft= "20"
               fill={`url(#gradientAnimated)`}
             >
-              {macros.carbs + macros.protein + macros.fats} cal
+              {macros.carbs + macros.protein + macros.fats + " " + "cal"}
             </SvgText>
           </Svg>
 
