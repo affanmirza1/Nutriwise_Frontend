@@ -23,7 +23,9 @@ const CameraComponent = ({ cameraRef, takePicture, closeCamera }) => {
 const styles = StyleSheet.create({
   camera: {
     width: '100%',
-    aspectRatio: 2.65 / 4,
+    marginTop: 0,
+    marginTop: 55,
+    aspectRatio: 10.5 / 16,
   },
   captureButtonContainer: {
     flex: 1,
