@@ -34,7 +34,7 @@ const styles = StyleSheet.create({
     marginBottom: 30,
   },
   captureButtonSpacer: {
-    height: 20, // Add some space between the close button and the camera button
+    height: 20, 
   },
   captureButton: {
     width: 70,
